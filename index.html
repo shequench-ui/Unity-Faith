@@ -35,8 +35,8 @@ border:1px solid color-mix(in srgb,var(--gold) 12%,transparent);color:var(--mt);
 .chip-primary{padding:8px 18px;border-radius:100px;font-size:13px;font-weight:600;background:color-mix(in srgb,var(--gold) 18%,transparent);
 border:1px solid color-mix(in srgb,var(--gold) 30%,transparent);color:var(--cream);cursor:pointer;transition:all .15s;white-space:nowrap;}
 .chip-primary:hover{background:color-mix(in srgb,var(--gold) 28%,transparent);border-color:var(--gold);}
-.ticket-vip{border:1px solid color-mix(in srgb,var(--gold) 35%,transparent) !important;background:color-mix(in srgb,var(--gold) 5%,var(--s2)) !important;}
-.ticket-vvip{border:1px solid color-mix(in srgb,var(--gold) 55%,transparent) !important;background:color-mix(in srgb,var(--gold) 8%,var(--s2)) !important;}
+ 
+ 
 .bible-section-hd{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--mt);padding:8px 0 6px;margin-top:8px;}
 /* Sermon video thumbnail */
 .sermon-thumb-lg{width:100%;aspect-ratio:16/9;border-radius:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden;position:relative;}
@@ -100,6 +100,27 @@ background:color-mix(in srgb,var(--gold) 14%,transparent);color:var(--gold);bord
 .upgrade-overlay.open{opacity:1;pointer-events:all;}
  
  
+ 
+ 
+/* ═══ TICKET TIERS ═══ */
+.tix-scroll{display:flex;gap:12px;overflow-x:auto;padding:4px 0 16px;scrollbar-width:none;}
+.tix-scroll::-webkit-scrollbar{display:none;}
+.tix-card{flex-shrink:0;width:200px;border-radius:20px;padding:20px 16px;cursor:pointer;transition:all .2s;border:1px solid var(--bd);background:var(--s2);display:flex;flex-direction:column;gap:8px;position:relative;overflow:hidden;}
+.tix-card:hover{transform:translateY(-3px);box-shadow:0 16px 40px -12px rgba(0,0,0,.4);}
+.tix-card.tier-eb{border-color:color-mix(in srgb,var(--sage) 30%,transparent);background:color-mix(in srgb,var(--sage) 6%,var(--s2));}
+.tix-card.tier-ga{border-color:var(--bd);}
+.tix-card.tier-vip{border-color:color-mix(in srgb,var(--gold) 35%,transparent);background:color-mix(in srgb,var(--gold) 5%,var(--s2));}
+.tix-card.tier-vvip{border-color:color-mix(in srgb,var(--gold) 55%,transparent);background:color-mix(in srgb,var(--gold) 9%,var(--s2));}
+.tix-card.tier-ultra{border-color:color-mix(in srgb,var(--sky) 45%,transparent);background:color-mix(in srgb,var(--sky) 8%,var(--s2));}
+.tix-card.tier-ult{border-color:color-mix(in srgb,var(--rose) 45%,transparent);background:linear-gradient(145deg,color-mix(in srgb,var(--rose) 10%,var(--s2)),color-mix(in srgb,var(--gold) 8%,var(--s2)));}
+.tix-badge{font-size:9px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;padding:3px 8px;border-radius:100px;display:inline-block;width:fit-content;}
+.tix-name{font-family:'Cormorant Garamond',serif;font-size:17px;font-weight:700;line-height:1.2;color:var(--cream);}
+.tix-desc{font-size:11px;color:var(--mt);line-height:1.5;flex:1;}
+.tix-price{font-size:22px;font-weight:700;font-family:'Cormorant Garamond',serif;margin-top:4px;}
+.tix-btn{width:100%;padding:10px;border-radius:12px;font-size:12px;font-weight:700;text-align:center;margin-top:4px;transition:opacity .15s;}
+.tix-btn:hover{opacity:.85;}
+/* shimmer on ultimate */
+.tix-card.tier-ult::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,200,80,.04) 0%,rgba(180,80,255,.06) 100%);pointer-events:none;}
  
 /* ═══ SPLASH ═══ */
 #splash{position:fixed;inset:0;z-index:999;background:var(--bg);display:flex;align-items:center;justify-content:center;flex-direction:column;transition:opacity .6s,transform .6s;}
@@ -644,6 +665,9 @@ function sCard(s){const gr=GRADIENTS[s.c]||GRADIENTS.gold;return`
  
  
  
+ 
+ 
+ 
 /* ═══ SPLASH ═══ */
 function initSplash(){
   if(localStorage.uf_nm){$('splash').classList.add('hide');setTimeout(()=>{$('splash').style.display='none';},600);$('shell').style.opacity='1';initApp();}
@@ -783,7 +807,58 @@ function openEvent(){$('cp-t').textContent='Unity in the City';$('cp-s').textCon
 $('cp-b').innerHTML=`<div class="rounded-2xl overflow-hidden mb-6 relative" style="background:linear-gradient(145deg,#0d0520,#1a0a2e,#2d1150,#4a1a6b)"><div class="absolute inset-0" style="background:radial-gradient(circle at 75% 20%,rgba(255,200,50,.35),transparent 55%),radial-gradient(circle at 15% 85%,rgba(180,80,255,.25),transparent 50%),radial-gradient(circle at 50% 110%,rgba(201,168,76,.15),transparent 60%)"></div><div class="absolute inset-0 opacity-10" style="background-image:repeating-linear-gradient(45deg,rgba(255,255,255,.03) 0,rgba(255,255,255,.03) 1px,transparent 1px,transparent 10px)"></div><div class="relative z-10 px-8 py-12 text-center"><span class="text-xs font-bold uppercase tracking-[.15em] px-4 py-1.5 rounded-full inline-block mb-6" style="background:rgba(255,200,50,.12);color:#FFD040;border:1px solid rgba(255,200,50,.25)">Kingston · National Revival · National Stadium</span><h1 class="font-display text-4xl sm:text-5xl font-bold text-white mb-3 leading-tight">Unity in the City</h1><p class="text-base mb-1" style="color:rgba(255,255,255,.65)">National Stadium · Kingston, Jamaica</p><p class="text-sm mb-6" style="color:rgba(255,255,255,.4)">National Revival · Worship · Ministry · Transformation</p><div class="flex justify-center gap-3 flex-wrap"><span class="text-xs font-bold px-3 py-1.5 rounded-full" style="background:rgba(255,255,255,.08);color:rgba(255,255,255,.7);border:1px solid rgba(255,255,255,.1)">🎤 Live Worship</span><span class="text-xs font-bold px-3 py-1.5 rounded-full" style="background:rgba(255,255,255,.08);color:rgba(255,255,255,.7);border:1px solid rgba(255,255,255,.1)">🏟️ National Stadium</span><span class="text-xs font-bold px-3 py-1.5 rounded-full" style="background:rgba(255,255,255,.08);color:rgba(255,255,255,.7);border:1px solid rgba(255,255,255,.1)">🙏 Ministry</span></div></div></div>
 <p class="text-base leading-relaxed mb-6" style="color:var(--txt)">Kingston's premier non-denominational Christian gospel event — a National Revival at the National Stadium bringing together thousands for worship, ministry, and transformation.</p>
 <h4 class="text-xs font-bold uppercase tracking-widest mb-3" style="color:var(--mt)">Get Tickets</h4>
-<div class="flex flex-col gap-3 mb-8" id="tix">${[['Early Bird','J$3,500','Limited availability · All general areas','earlybird','','Best Deal'],['General Admission','J$5,000','All general areas · Standard entry','ga','',''],['VIP','J$10,000','Priority entry · VIP seating · Gift bag','vip','ticket-vip','Premium']].map(([n,p,d,k,cls,badge])=>`<div class="pcard ${cls} flex items-center gap-4 cursor-pointer" onclick="selTix('${k}','${n}','${p}')"><div class="flex-1"><div class="flex items-center gap-2"><div class="font-semibold text-base" style="color:var(--cream)">${n}</div>${badge?`<span class="text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wide" style="background:color-mix(in srgb,var(--gold) 18%,transparent);color:var(--gold);border:1px solid color-mix(in srgb,var(--gold) 25%,transparent)">${badge}</span>`:''}</div><div class="text-sm mt-0.5" style="color:var(--mt)">${d}</div></div><div class="text-right shrink-0"><div class="font-bold text-base" style="color:var(--gold)">${p}</div><button class="mt-2 px-4 py-2 rounded-xl font-bold text-sm transition" style="background:var(--gold);color:var(--bg)">Select →</button></div></div>`).join('')}</div>
+<p class="text-xs mb-3" style="color:var(--dm)">Swipe to explore tiers →</p>
+<div class="tix-scroll" id="tix">
+ 
+<div class="tix-card tier-eb" onclick="selTix('earlybird','Early Bird','J$3,500')">
+  <span class="tix-badge" style="background:color-mix(in srgb,var(--sage) 18%,transparent);color:var(--sage)">Best Deal</span>
+  <div class="tix-name">Early Bird</div>
+  <div class="tix-desc">Limited seats · All general areas · First come first served</div>
+  <div class="tix-price" style="color:var(--sage)">J$3,500</div>
+  <div class="tix-btn" style="background:color-mix(in srgb,var(--sage) 18%,transparent);color:var(--sage)">Select →</div>
+</div>
+ 
+<div class="tix-card tier-ga" onclick="selTix('ga','General Admission','J$5,000')">
+  <span class="tix-badge" style="background:color-mix(in srgb,var(--mt) 18%,transparent);color:var(--mt)">Standard</span>
+  <div class="tix-name">General Admission</div>
+  <div class="tix-desc">All general areas · Standard entry · Open seating</div>
+  <div class="tix-price" style="color:var(--txt)">J$5,000</div>
+  <div class="tix-btn" style="background:color-mix(in srgb,var(--mt) 15%,transparent);color:var(--cream)">Select →</div>
+</div>
+ 
+<div class="tix-card tier-vip" onclick="selTix('vip','VIP','J$10,000')">
+  <span class="tix-badge" style="background:color-mix(in srgb,var(--gold) 18%,transparent);color:var(--gold)">Popular</span>
+  <div class="tix-name">VIP</div>
+  <div class="tix-desc">Priority entry · Reserved VIP seating · Exclusive gift bag</div>
+  <div class="tix-price" style="color:var(--gold)">J$10,000</div>
+  <div class="tix-btn" style="background:var(--gold);color:var(--bg)">Select →</div>
+</div>
+ 
+<div class="tix-card tier-vvip" onclick="selTix('vvip','VVIP','J$15,000')">
+  <span class="tix-badge" style="background:color-mix(in srgb,var(--gold) 25%,transparent);color:var(--gold)">Premium</span>
+  <div class="tix-name">VVIP</div>
+  <div class="tix-desc">Front stage · Backstage access · VIP lounge · Gift bag</div>
+  <div class="tix-price" style="color:var(--gold)">J$15,000</div>
+  <div class="tix-btn" style="background:var(--gold);color:var(--bg)">Select →</div>
+</div>
+ 
+<div class="tix-card tier-ultra" onclick="selTix('ultra','Ultra','J$25,000')">
+  <span class="tix-badge" style="background:color-mix(in srgb,var(--sky) 18%,transparent);color:var(--sky)">Exclusive</span>
+  <div class="tix-name">Ultra</div>
+  <div class="tix-desc">Premium front stage · Artist meet & greet · VIP lounge · Concierge</div>
+  <div class="tix-price" style="color:var(--sky)">J$25,000</div>
+  <div class="tix-btn" style="background:color-mix(in srgb,var(--sky) 20%,transparent);color:var(--sky)">Select →</div>
+</div>
+ 
+<div class="tix-card tier-ult" onclick="selTix('ultimate','Ultimate Experience Box','J$150,000')">
+  <span class="tix-badge" style="background:linear-gradient(90deg,rgba(255,160,60,.25),rgba(180,80,255,.25));color:#FFD080">✦ Ultimate</span>
+  <div class="tix-name">Ultimate Experience Box</div>
+  <div class="tix-desc">Private luxury box · Full catering · Personal host · All access passes · Keepsakes</div>
+  <div class="tix-price" style="background:linear-gradient(90deg,var(--gold),var(--rose));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">J$150,000</div>
+  <div class="tix-btn" style="background:linear-gradient(90deg,color-mix(in srgb,var(--gold) 25%,transparent),color-mix(in srgb,var(--rose) 20%,transparent));color:#FFD080">Select →</div>
+</div>
+ 
+</div>
 <h4 class="text-xs font-bold uppercase tracking-widest mb-3" style="color:var(--mt)">What to Expect</h4>
 <div class="grid grid-cols-2 gap-3 mb-6">${[['🎤','Live Worship','Top gospel artists'],['🏟️','National Stadium','Kingston\'s iconic venue'],['💃','Dance','Praise dance & choreography'],['🙏','Ministry','Powerful altar call & prayer']].map(([e,t,d])=>`<div class="pcard text-center"><div class="text-3xl mb-2">${e}</div><div class="font-semibold text-base" style="color:var(--cream)">${t}</div><div class="text-sm mt-0.5" style="color:var(--mt)">${d}</div></div>`).join('')}</div>
 <div class="pcard text-center"><p class="text-sm leading-relaxed" style="color:var(--mt)">More than a concert — a <strong style="color:var(--cream)">movement</strong> to unite Jamaica for the glory of God.</p></div>`;}
