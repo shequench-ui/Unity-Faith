@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth antialiased">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>Unity Faith — Scripture, Prayer & Study</title>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config={darkMode:'class',theme:{extend:{
+fontFamily:{sans:['Outfit','-apple-system','sans-serif'],display:['Cormorant Garamond','Georgia','serif']},
+colors:{f:{bg:'var(--bg)',s1:'var(--s1)',s2:'var(--s2)',s3:'var(--s3)',bd:'var(--bd)',
+  gold:'var(--gold)',goldlt:'var(--goldlt)',cream:'var(--cream)',sage:'var(--sage)',
+  rose:'var(--rose)',sky:'var(--sky)',txt:'var(--txt)',mt:'var(--mt)',dm:'var(--dm)',
+  gl:'var(--gl)',glb:'var(--glb)'}},
+animation:{'up':'up .45s cubic-bezier(.16,1,.3,1) forwards','fade':'fade .35s ease forwards','breathe':'breathe 4s ease-in-out infinite',
+  'dot1':'dot 1.4s ease infinite','dot2':'dot 1.4s ease .2s infinite','dot3':'dot 1.4s ease .4s infinite'},
+keyframes:{up:{'0%':{opacity:0,transform:'translateY(14px)'},'100%':{opacity:1,transform:'translateY(0)'}},
+  fade:{'0%':{opacity:0},'100%':{opacity:1}},breathe:{'0%,100%':{opacity:.5},'50%':{opacity:1}},
+  dot:{'0%,60%,100%':{opacity:.2,transform:'scale(.8)'},'30%':{opacity:1,transform:'scale(1)'}}}
+}}}
+</script>
+<style>
+:root{--bg:#0F0D0A;--s1:#1A1714;--s2:#221F19;--s3:#2C2822;--bd:rgba(212,190,150,.07);
+--gl:rgba(26,23,20,.78);--glb:rgba(212,190,150,.06);
+--gold:#C9A84C;--goldlt:#E2C87A;--cream:#F5ECD7;--sage:#7A9E7E;--rose:#C47D7D;--sky:#7DAAC4;
+--txt:#E8E0D0;--mt:#8C8478;--dm:#5C564E;color-scheme:dark;}
+html.light{--bg:#FAF7F2;--s1:#FFFFFF;--s2:#F3EFE9;--s3:#E8E3DB;--bd:rgba(80,70,50,.09);
+--gl:rgba(255,255,255,.85);--glb:rgba(80,70,50,.07);
+--gold:#9A7928;--goldlt:#B89230;--cream:#1E1A12;--sage:#3E7A44;--rose:#A04848;--sky:#3872A0;
+--txt:#3A3428;--mt:#807868;--dm:#AAA498;color-scheme:light;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--txt);font-family:'Outfit',sans-serif;min-height:100dvh;
+-webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent;transition:background .3s,color .3s;}
+::-webkit-scrollbar{width:4px;}::-webkit-scrollbar-thumb{background:var(--s3);border-radius:2px;}
+.gl{background:var(--gl);backdrop-filter:blur(24px) saturate(140%);-webkit-backdrop-filter:blur(24px) saturate(140%);border:1px solid var(--glb);}
+.verse-t{font-family:'Cormorant Garamond',Georgia,serif;font-style:italic;line-height:1.65;color:var(--cream);}
+.verse-r{font-family:'Outfit',sans-serif;font-size:12px;font-weight:600;color:var(--gold);letter-spacing:.04em;}
+.chip{padding:7px 14px;border-radius:100px;font-size:12px;font-weight:500;background:color-mix(in srgb,var(--gold) 8%,transparent);
+border:1px solid color-mix(in srgb,var(--gold) 14%,transparent);color:var(--mt);cursor:pointer;transition:all .15s;white-space:nowrap;}
+.chip:hover{background:color-mix(in srgb,var(--gold) 16%,transparent);color:var(--cream);border-color:color-mix(in srgb,var(--gold) 28%,transparent);}
+.pcard{background:var(--s2);border:1px solid var(--bd);border-radius:16px;padding:16px;transition:border-color .2s;}
+.pcard:hover{border-color:color-mix(in srgb,var(--gold) 18%,transparent);}
+.cact{display:inline-flex;align-items:center;gap:4px;padding:5px 11px;border-radius:100px;font-size:11px;font-weight:600;
+border:1px solid var(--bd);color:var(--mt);cursor:pointer;transition:all .15s;background:var(--s1);}
+.cact:hover{border-color:var(--gold);color:var(--gold);}
+@keyframes blink-c{0%,100%{opacity:1}50%{opacity:0}}
+.stream-c{display:inline-block;width:2px;height:14px;background:var(--gold);margin-left:2px;vertical-align:middle;animation:blink-c .8s infinite;}
+/* Gradient text fix */
+.grad-text{background:linear-gradient(90deg,var(--gold),var(--sage));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+/* Island */
+.island{transition:all .5s cubic-bezier(.34,1.56,.64,1);}
+/* Bottom stack: nav=64, bar area=~60, gap=8 */
+.bnav{position:fixed;bottom:0;left:0;right:0;height:60px;display:flex;z-index:100;background:var(--s1);border-top:1px solid var(--bd);padding-bottom:env(safe-area-inset-bottom);}
+.bnav-i{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-size:10px;font-weight:500;color:var(--dm);cursor:pointer;transition:color .12s;position:relative;}
+.bnav-i.on{color:var(--gold);}
+.bnav-i.on::after{content:'';position:absolute;top:0;left:30%;right:30%;height:2px;background:var(--gold);border-radius:2px;}
+.bnav-i i{font-size:17px;}
+/* Typing */
+.tdots{display:flex;gap:4px;align-items:center;padding:10px 16px;background:var(--s2);border-radius:16px;border:1px solid var(--bd);}
+.tdot{width:5px;height:5px;border-radius:50%;background:var(--mt);}
+/* Overlay panel */
+#cp{position:fixed;inset:0;z-index:200;display:none;flex-direction:column;background:var(--bg);}
+#cp.open{display:flex;}
+.cp-top{height:52px;display:flex;align-items:center;gap:12px;padding:0 16px;border-bottom:1px solid var(--bd);flex-shrink:0;background:var(--s1);}
+.cp-bd{flex:1;overflow-y:auto;padding:20px;}
+/* Page system */
+.page{display:none;}.page.active{display:block;}
+/* Responsive: wider on desktop */
+@media(min-width:1024px){
+  .main-col{max-width:860px;}
+  .bnav{max-width:860px;left:50%;transform:translateX(-50%);border-radius:16px 16px 0 0;border-left:1px solid var(--bd);border-right:1px solid var(--bd);}
+  .omni-wrap{max-width:860px;}
+}
+@media(min-width:1280px){.main-col{max-width:960px;}}
+/* Ambient */
+.ambient{position:fixed;inset:0;z-index:-1;pointer-events:none;
+background:radial-gradient(ellipse 50% 35% at 50% 0%,color-mix(in srgb,var(--gold) 5%,transparent) 0%,transparent 70%);}
+</style>
+</head>
+<body>
+<div class="ambient"></div>
+
+<!-- ═══ OVERLAY PANEL ═══ -->
+<div id="cp"><div class="cp-top">
+<button onclick="cpClose()" class="w-8 h-8 rounded-full flex items-center justify-center hover:bg-f-s2 transition shrink-0" style="color:var(--mt)"><i class="fa-solid fa-arrow-left text-xs"></i></button>
+<div class="flex-1 min-w-0"><div class="font-semibold text-sm truncate" id="cp-t" style="color:var(--cream)"></div><div class="text-xs" style="color:var(--dm)" id="cp-s">Unity Faith</div></div>
+</div><div class="cp-bd" id="cp-b"></div></div>
+
+<!-- ═══ DYNAMIC ISLAND ═══ -->
+<div class="fixed top-3 left-0 w-full flex justify-center z-50 px-4 pointer-events-none">
+<div id="island" class="island gl pointer-events-auto h-[42px] rounded-full shadow-lg flex items-center justify-between px-3 overflow-hidden" style="width:220px">
+<div id="di-def" class="flex items-center justify-between w-full px-0.5 transition-opacity duration-300">
+  <div class="flex items-center gap-2 cursor-pointer" onclick="goTab('home')">
+    <div class="w-5 h-5 rounded-full flex items-center justify-center" style="background:color-mix(in srgb,var(--gold) 14%,transparent)"><i class="fa-solid fa-cross" style="font-size:7px;color:var(--gold)"></i></div>
+    <span class="font-display font-semibold text-[13px] tracking-tight" style="color:var(--cream)">Unity Faith</span>
+  </div>
+  <div class="flex items-center gap-1">
+    <div class="text-[9px] font-bold px-1.5 py-0.5 rounded-full" id="streak-b" style="color:var(--gold);background:color-mix(in srgb,var(--gold) 10%,transparent)"></div>
+    <button onclick="toggleTheme()" class="w-6 h-6 rounded-full flex items-center justify-center transition text-[10px]" style="color:var(--dm)" id="th-b"><i class="fa-solid fa-sun"></i></button>
+  </div>
+</div>
+<div id="di-proc" class="absolute inset-0 flex items-center justify-center gap-2 opacity-0 pointer-events-none transition-opacity duration-300">
+  <i class="fa-solid fa-cross animate-pulse" style="font-size:8px;color:var(--gold)"></i>
+  <span class="text-xs font-medium" style="color:var(--cream)" id="di-txt"></span>
+</div>
+</div></div>
+
+<!-- ═══ MAIN ═══ -->
+<main class="main-col mx-auto px-4 sm:px-6 lg:px-8 pt-16 relative z-10" style="padding-bottom:140px;" id="stage">
+
+<!-- HOME -->
+<div class="page active" id="pg-home">
+<div class="mb-8 animate-up">
+  <h1 class="font-display text-3xl sm:text-4xl lg:text-[2.75rem] font-bold tracking-tight leading-[1.15]" style="color:var(--cream)" id="greet"></h1>
+  <p class="text-sm mt-2 font-medium flex items-center gap-2" style="color:var(--mt)"><i class="fa-solid fa-cross" style="font-size:8px;color:var(--gold)"></i> Scripture · Prayer · Study · Sermons</p>
+</div>
+
+<!-- UNITY IN THE CITY EVENT BANNER -->
+<div class="rounded-2xl overflow-hidden mb-8 cursor-pointer group animate-up relative" style="animation-delay:.03s;background:linear-gradient(135deg,#1a0a2e,#2d1150,#4a1a6b);border:1px solid rgba(180,130,255,.15)" onclick="openEvent()">
+  <div class="absolute inset-0 opacity-20" style="background:radial-gradient(circle at 80% 30%,rgba(255,200,50,.3),transparent 60%),radial-gradient(circle at 20% 80%,rgba(180,80,255,.2),transparent 50%)"></div>
+  <div class="relative z-10 px-5 py-5 sm:px-7 sm:py-6 flex items-center gap-4 sm:gap-6">
+    <div class="flex flex-col items-center justify-center shrink-0 w-14 h-14 sm:w-16 sm:h-16 rounded-2xl" style="background:rgba(255,200,50,.15);border:1px solid rgba(255,200,50,.2)">
+      <span class="text-[10px] font-bold uppercase tracking-wider" style="color:rgba(255,200,50,.8)">Aug</span>
+      <span class="text-xl sm:text-2xl font-display font-bold" style="color:#FFD040">16</span>
+    </div>
+    <div class="flex-1 min-w-0">
+      <div class="flex items-center gap-2 mb-1">
+        <span class="text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full" style="background:rgba(255,200,50,.2);color:#FFD040;border:1px solid rgba(255,200,50,.2)">New · 2026</span>
+        <span class="text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full" style="background:rgba(255,255,255,.08);color:rgba(255,255,255,.6)">Tickets Live</span>
+      </div>
+      <h3 class="font-display font-bold text-lg sm:text-xl text-white leading-tight">Unity in the City</h3>
+      <p class="text-xs mt-1 leading-relaxed" style="color:rgba(255,255,255,.55)">Kingston's premier gospel mega-event · National Stadium · Worship · Comedy · Dance</p>
+    </div>
+    <i class="fa-solid fa-chevron-right text-white/30 shrink-0"></i>
+  </div>
+</div>
+
+<!-- VOTD -->
+<div class="rounded-2xl overflow-hidden mb-8 cursor-pointer group animate-up relative" style="animation-delay:.06s" onclick="promptAI('Help me reflect on '+VOTD.r+': '+VOTD.t)">
+  <div class="absolute inset-0" style="background:linear-gradient(180deg,color-mix(in srgb,var(--gold) 4%,var(--s2)),var(--s2))"></div>
+  <div class="relative z-10 px-5 py-7 sm:px-8 sm:py-9">
+    <div class="flex items-center gap-2 mb-5">
+      <div class="w-7 h-7 rounded-lg flex items-center justify-center" style="background:color-mix(in srgb,var(--gold) 12%,transparent)"><i class="fa-solid fa-book-bible text-xs" style="color:var(--gold)"></i></div>
+      <span class="text-[10px] font-bold uppercase tracking-[.1em]" style="color:var(--gold)">Verse of the Day</span>
+      <span class="text-[10px] ml-auto" style="color:var(--dm)" id="today-d"></span>
+    </div>
+    <p class="verse-t text-xl sm:text-2xl lg:text-[1.7rem] mb-3" id="votd-t"></p>
+    <p class="verse-r" id="votd-r"></p>
+    <div class="flex gap-2 mt-5">
+      <button class="chip text-[11px]" onclick="event.stopPropagation();promptAI('Turn '+VOTD.r+' into a personal prayer for me')">Pray This</button>
+      <button class="chip text-[11px]" onclick="event.stopPropagation();promptAI('Give me a 3-day study plan around '+VOTD.r)">Study Deeper</button>
+      <button class="chip text-[11px]" onclick="event.stopPropagation();doSaveVerse(VOTD.t,VOTD.r)">Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- Cards row -->
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8 animate-up" style="animation-delay:.09s">
+  <div class="gl p-4 sm:p-5 rounded-2xl cursor-pointer" onclick="goTab('study')" id="jcard"></div>
+  <div class="gl p-4 sm:p-5 rounded-2xl cursor-pointer" onclick="goTab('pray')">
+    <div class="flex items-center justify-between mb-3">
+      <div class="w-9 h-9 rounded-xl flex items-center justify-center" style="background:color-mix(in srgb,var(--rose) 10%,transparent)"><i class="fa-solid fa-hands-praying text-sm" style="color:var(--rose)"></i></div>
+      <span class="text-[10px] font-bold rounded-full px-2 py-0.5 flex items-center gap-1" style="background:color-mix(in srgb,var(--rose) 10%,transparent);color:var(--rose)"><i class="fa-solid fa-circle" style="font-size:4px" class="animate-breathe"></i> Always Open</span>
+    </div>
+    <p class="text-[10px] uppercase tracking-widest font-bold" style="color:var(--mt)">Prayer Space</p>
+    <h3 class="font-display font-bold text-lg mt-0.5" style="color:var(--cream)">Start a Prayer</h3>
+    <p class="text-xs mt-1 leading-relaxed" style="color:var(--mt)">AI-guided, scripture-grounded prayer.</p>
+  </div>
+</div>
+
+<!-- Topics -->
+<div class="mb-8 animate-up" style="animation-delay:.12s">
+  <h4 class="text-[10px] font-bold uppercase tracking-widest mb-3" style="color:var(--mt)">Explore by Topic</h4>
+  <div class="flex flex-wrap gap-2" id="topics-w"></div>
+</div>
+
+<!-- Sermons preview -->
+<div class="animate-up" style="animation-delay:.15s">
+  <div class="flex justify-between items-center mb-3">
+    <h4 class="text-[10px] font-bold uppercase tracking-widest" style="color:var(--mt)">Recent Sermons</h4>
+    <button onclick="goTab('sermons')" class="text-xs font-semibold" style="color:var(--gold)">View All →</button>
+  </div>
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-3" id="sprev"></div>
+</div>
+</div>
+
+<!-- STUDY -->
+<div class="page" id="pg-study">
+<div class="flex items-center gap-3 mb-5"><div class="w-8 h-8 rounded-xl flex items-center justify-center" style="background:color-mix(in srgb,var(--gold) 10%,transparent)"><i class="fa-solid fa-book-open" style="color:var(--gold)"></i></div><div><h2 class="font-display text-xl sm:text-2xl font-bold" style="color:var(--cream)">Scripture & Study</h2></div></div>
+<div id="study-j" class="mb-5"></div>
+<h4 class="text-[10px] font-bold uppercase tracking-widest mb-3" style="color:var(--mt)">Browse Scripture</h4>
+<div class="grid grid-cols-4 sm:grid-cols-5 md:grid-cols-6 lg:grid-cols-8 gap-1.5 mb-5" id="bks"></div>
+<h4 class="text-[10px] font-bold uppercase tracking-widest mb-3 mt-2" style="color:var(--mt)">Guided Study</h4>
+<div class="flex flex-col gap-2" id="stupr"></div>
+</div>
+
+<!-- PRAY -->
+<div class="page" id="pg-pray">
+<div class="flex items-center gap-3 mb-5"><div class="w-8 h-8 rounded-xl flex items-center justify-center" style="background:color-mix(in srgb,var(--rose) 10%,transparent)"><i class="fa-solid fa-hands-praying" style="color:var(--rose)"></i></div><div><h2 class="font-display text-xl sm:text-2xl font-bold" style="color:var(--cream)">Prayer Space</h2></div></div>
+<div class="flex flex-wrap gap-2 mb-5" id="pchips"></div>
+<h4 class="text-[10px] font-bold uppercase tracking-widest mb-3" style="color:var(--mt)">Saved Prayers</h4>
+<div id="pjrn"></div>
+</div>
+
+<!-- SERMONS -->
+<div class="page" id="pg-sermons">
+<div class="flex items-center gap-3 mb-2"><div class="w-8 h-8 rounded-xl flex items-center justify-center" style="background:color-mix(in srgb,var(--sky) 10%,transparent)"><i class="fa-solid fa-podcast" style="color:var(--sky)"></i></div><div><h2 class="font-display text-xl sm:text-2xl font-bold" style="color:var(--cream)">Sermons</h2><p class="text-xs" style="color:var(--mt)">Unity Beam · Verse detection & AI summaries</p></div></div>
+<div id="sfull" class="mt-4"></div>
+</div>
+
+<!-- SAVED -->
+<div class="page" id="pg-saved">
+<div class="flex items-center gap-3 mb-5"><div class="w-8 h-8 rounded-xl flex items-center justify-center" style="background:color-mix(in srgb,var(--gold) 10%,transparent)"><i class="fa-solid fa-bookmark" style="color:var(--gold)"></i></div><div><h2 class="font-display text-xl sm:text-2xl font-bold" style="color:var(--cream)">Saved Moments</h2><p class="text-xs" id="scnt" style="color:var(--mt)"></p></div></div>
+<div id="slst"></div>
+</div>
+
+<!-- CHAT OVERLAY -->
+<div id="cv" class="hidden flex-col gap-2 w-full"></div>
+
+</main>
+
+<!-- ═══ OMNI BAR ═══ -->
+<div class="omni-wrap fixed left-1/2 -translate-x-1/2 px-4 z-40" style="bottom:68px;width:100%;max-width:100%">
+<div class="mx-auto" style="max-width:860px">
+  <div id="omni" class="gl rounded-[1.5rem] p-1.5 flex items-center shadow-lg transition-all duration-200" style="border:1px solid var(--glb)">
+    <button onclick="goHome()" class="w-8 h-8 rounded-full flex items-center justify-center shrink-0 ml-0.5 transition" style="color:var(--gold)"><i class="fa-solid fa-cross" style="font-size:9px"></i></button>
+    <textarea id="oin" rows="1" class="flex-1 bg-transparent border-none outline-none focus:ring-0 text-[14px] resize-none py-2 px-2 max-h-24 overflow-y-auto" style="color:var(--cream)" placeholder="Ask about scripture, prayer, or study…"></textarea>
+    <button id="bsend" onclick="handleSend()" class="w-8 h-8 rounded-full flex items-center justify-center transition shadow transform scale-0 duration-200 mr-0.5" style="background:var(--gold);color:var(--bg)"><i class="fa-solid fa-arrow-up text-xs"></i></button>
+  </div>
+  <div class="flex gap-1.5 flex-wrap justify-center mt-2 px-1" id="ochips"></div>
+</div></div>
+
+<!-- ═══ BOTTOM NAV ═══ -->
+<nav class="bnav" id="bnav">
+<div class="bnav-i on" data-t="home" onclick="goTab('home')"><i class="fa-solid fa-house"></i><span>Home</span></div>
+<div class="bnav-i" data-t="study" onclick="goTab('study')"><i class="fa-solid fa-book-open"></i><span>Study</span></div>
+<div class="bnav-i" data-t="pray" onclick="goTab('pray')"><i class="fa-solid fa-hands-praying"></i><span>Pray</span></div>
+<div class="bnav-i" data-t="sermons" onclick="goTab('sermons')"><i class="fa-solid fa-podcast"></i><span>Sermons</span></div>
+<div class="bnav-i" data-t="saved" onclick="goTab('saved')"><i class="fa-solid fa-bookmark"></i><span>Saved</span></div>
+</nav>
+
+<script>
+const CFG={KEY:'sk-cc6ecc51f2ba4366bb6b95905d8e9f2a',URL:'https://api.deepseek.com/v1/chat/completions',MODEL:'deepseek-chat'};
+const SYS=`You are Unity Faith — a warm, reverent, scripture-grounded AI companion. Like a wise pastor-friend.
+Rules: ALWAYS cite specific verses (book ch:verse). Include verse text in quotes. Concise (mobile-first). **bold** for emphasis. Prayers in first person. Study: context→meaning→cross-refs→application. Empathy before scripture. Never judgmental. Not a replacement for church.`;
+let ST={theme:localStorage.uf_th||(matchMedia('(prefers-color-scheme:light)').matches?'light':'dark'),tab:'home',chat:false,streaming:false,abort:null,convo:[]};
+let saved=JSON.parse(localStorage.uf_sv||'[]'),prayers=JSON.parse(localStorage.uf_pr||'[]'),
+journey=JSON.parse(localStorage.uf_jn||'null'),streak=+(localStorage.uf_st||0),lastDay=localStorage.uf_ld||'';
+const ALLV=[{t:'"For I know the plans I have for you," declares the Lord, "plans to prosper you and not to harm you, plans to give you hope and a future."',r:'Jeremiah 29:11'},{t:'"Trust in the Lord with all your heart and lean not on your own understanding; in all your ways submit to him, and he will make your paths straight."',r:'Proverbs 3:5-6'},{t:'"The Lord is my shepherd, I lack nothing. He makes me lie down in green pastures, he leads me beside quiet waters, he refreshes my soul."',r:'Psalm 23:1-3'},{t:'"Be strong and courageous. Do not be afraid; do not be discouraged, for the Lord your God will be with you wherever you go."',r:'Joshua 1:9'},{t:'"Come to me, all you who are weary and burdened, and I will give you rest."',r:'Matthew 11:28'},{t:'"I can do all this through him who gives me strength."',r:'Philippians 4:13'},{t:'"The Lord is close to the brokenhearted and saves those who are crushed in spirit."',r:'Psalm 34:18'},{t:'"And we know that in all things God works for the good of those who love him, who have been called according to his purpose."',r:'Romans 8:28'},{t:'"He has made everything beautiful in its time. He has also set eternity in the human heart."',r:'Ecclesiastes 3:11'},{t:'"Be still, and know that I am God."',r:'Psalm 46:10'}];
+const VOTD=ALLV[new Date().getDate()%ALLV.length];
+const SERMONS=[{title:'Walking by Faith',pastor:'Pastor D. Williams',book:'Hebrews 11',date:'Mar 30',dur:'42 min',verses:['Heb 11:1','Heb 11:6','2 Cor 5:7'],c:'gold'},{title:'The Still Small Voice',pastor:'Pastor M. Johnson',book:'1 Kings 19',date:'Mar 23',dur:'38 min',verses:['1 Kings 19:12','Psalm 46:10','John 10:27'],c:'rose'},{title:'Seasons of Waiting',pastor:'Pastor R. Clarke',book:'Ecclesiastes 3',date:'Mar 16',dur:'35 min',verses:['Eccl 3:1','Isaiah 40:31','Psalm 27:14'],c:'sky'},{title:'Armor of God',pastor:'Pastor D. Williams',book:'Ephesians 6:10-18',date:'Mar 9',dur:'45 min',verses:['Eph 6:11','Eph 6:17','Rom 13:12'],c:'sage'},{title:'Rivers in the Desert',pastor:'Pastor A. Lewis',book:'Isaiah 43:18-19',date:'Mar 2',dur:'40 min',verses:['Isa 43:19','Isa 35:6','John 7:38'],c:'gold'}];
+const BOOKS=['Genesis','Exodus','Leviticus','Numbers','Deuteronomy','Joshua','Judges','Ruth','1 Samuel','2 Samuel','1 Kings','2 Kings','1 Chronicles','2 Chronicles','Ezra','Nehemiah','Esther','Job','Psalms','Proverbs','Ecclesiastes','Song of Solomon','Isaiah','Jeremiah','Lamentations','Ezekiel','Daniel','Hosea','Joel','Amos','Obadiah','Jonah','Micah','Nahum','Habakkuk','Zephaniah','Haggai','Zechariah','Malachi','Matthew','Mark','Luke','John','Acts','Romans','1 Corinthians','2 Corinthians','Galatians','Ephesians','Philippians','Colossians','1 Thessalonians','2 Thessalonians','1 Timothy','2 Timothy','Titus','Philemon','Hebrews','James','1 Peter','2 Peter','1 John','2 John','3 John','Jude','Revelation'];
+const TOPICS=[['Peace & Anxiety','What does the Bible say about anxiety and finding peace?'],['Forgiveness','What does the Bible say about forgiveness?'],["God's Love",'Verses about God\'s love and faithfulness'],['Purpose','What does scripture say about purpose and calling?'],['Hope','Bible verses about hope in hard times'],['Wisdom','What does the Bible teach about wisdom?'],['Family','Scriptures about marriage and family'],['Strength','Verses about strength and courage']];
+const $=id=>document.getElementById(id);
+function init(){
+  if(ST.theme==='light')document.documentElement.classList.add('light');
+  $('th-b').innerHTML=ST.theme==='dark'?'<i class="fa-solid fa-sun"></i>':'<i class="fa-solid fa-moon"></i>';
+  const today=new Date().toDateString();
+  if(lastDay&&lastDay!==today){const d=Math.floor((new Date(today)-new Date(lastDay))/864e5);streak=d>1?1:streak+1;}else if(!lastDay)streak=1;
+  localStorage.uf_st=streak;localStorage.uf_ld=today;
+  $('streak-b').textContent=streak>0?streak+'-day':'';
+  const name=localStorage.uf_nm||'';
+  if(!name){const n=prompt('Welcome to Unity Faith! What should we call you?')||'Friend';localStorage.uf_nm=n;}
+  const h=new Date().getHours(),g=h<12?'Good morning':h<17?'Good afternoon':'Good evening';
+  $('greet').innerHTML=`${g}, ${esc(localStorage.uf_nm||'Friend')}.<br><span class="grad-text">What's on your heart today?</span>`;
+  $('today-d').textContent=new Date().toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'});
+  $('votd-t').textContent=VOTD.t;$('votd-r').textContent=VOTD.r+' NIV';
+  if(!journey){journey={book:'Psalms',day:1,total:30,current:'Psalm 1'};localStorage.uf_jn=JSON.stringify(journey);}
+  rJCard();
+  $('topics-w').innerHTML=TOPICS.map(([l,q])=>`<div class="chip text-[11px]" onclick="promptAI(\`${q}\`)">${l}</div>`).join('');
+  $('sprev').innerHTML=SERMONS.slice(0,2).map(sCard).join('');
+  const inp=$('oin');
+  inp.addEventListener('input',function(){this.style.height='auto';this.style.height=Math.min(this.scrollHeight,96)+'px';
+    $('bsend').classList.toggle('scale-0',!this.value.trim());$('bsend').classList.toggle('scale-100',!!this.value.trim());});
+  inp.addEventListener('keypress',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();handleSend();}});
+  rTab();updChips();
+}
+function toggleTheme(){ST.theme=ST.theme==='dark'?'light':'dark';document.documentElement.classList.toggle('light');
+localStorage.uf_th=ST.theme;$('th-b').innerHTML=ST.theme==='dark'?'<i class="fa-solid fa-sun"></i>':'<i class="fa-solid fa-moon"></i>';}
+function goTab(t){if(ST.chat)goHome();ST.tab=t;document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+$('pg-'+t)?.classList.add('active');document.querySelectorAll('.bnav-i').forEach(b=>b.classList.toggle('on',b.dataset.t===t));
+rTab();updChips();window.scrollTo({top:0});}
+function goHome(){if(!ST.chat)return;ST.chat=false;if(ST.abort){ST.abort.abort();ST.abort=null;ST.streaming=false;}
+$('cv').classList.add('hidden');$('cv').classList.remove('flex');$('cv').innerHTML='';$('pg-'+ST.tab)?.classList.add('active');ST.convo=[];updChips();}
+function rTab(){if(ST.tab==='study')rStudy();else if(ST.tab==='pray')rPray();else if(ST.tab==='sermons')rSermons();else if(ST.tab==='saved')rSaved();}
+function updChips(){if(ST.chat){$('ochips').innerHTML='';return;}
+const m={home:[['Pray','Help me pray'],['Verse','A verse for today'],['Study','Study scripture'],['Peace','Anxious — what does scripture say?']],
+study:[['Psalms','Guide me through Psalm 1'],['Romans 8','Explain Romans 8:28'],['Parables','Jesus\' parables'],['Prophecy','OT prophecy overview']],
+pray:[['Strength','Prayer for strength'],['Gratitude','Prayer of gratitude'],['Family','Prayer for my family'],['Guidance','Prayer for guidance']],
+sermons:[['Summary','Summarize the latest sermon'],['Hebrews','Deep dive Hebrews 11']],saved:[['Reflect','Reflect on my saved verses']]};
+$('ochips').innerHTML=(m[ST.tab]||m.home).map(([l,q])=>`<div class="chip text-[11px]" onclick="promptAI(\`${q}\`)">${l}</div>`).join('');}
+/* Island */
+function iMsg(msg,dur=3e3){$('island').style.width=innerWidth<768?'260px':'300px';$('di-def').classList.add('opacity-0');$('di-def').style.pointerEvents='none';
+$('di-txt').textContent=msg;$('di-proc').classList.remove('opacity-0');if(dur>0)setTimeout(iHide,dur);}
+function iHide(){$('di-proc').classList.add('opacity-0');setTimeout(()=>{$('island').style.width='220px';$('di-def').classList.remove('opacity-0');$('di-def').style.pointerEvents='auto';},300);}
+/* Chat */
+function enterChat(){if(ST.chat)return;ST.chat=true;$('ochips').innerHTML='';document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+$('cv').classList.remove('hidden');$('cv').classList.add('flex');}
+function handleSend(){if(ST.streaming)return;const t=$('oin').value.trim();if(!t)return;$('oin').value='';$('oin').style.height='auto';$('oin').dispatchEvent(new Event('input'));promptAI(t);}
+async function promptAI(text){if(ST.streaming)return;enterChat();rUser(text);ST.convo.push({role:'user',content:text});iMsg('Searching scripture…',0);showTy();
+try{await streamAI();}catch(e){hideTy();iHide();if(e.name!=='AbortError')botMsg(`<em class="verse-t">"Be still, and know that I am God."</em> <span class="verse-r">— Psalm 46:10</span><br><br>Please try again.`);}}
+function showTy(){$('cv').insertAdjacentHTML('beforeend',`<div id="typ" class="flex gap-2.5 mt-2 animate-fade"><div class="w-6 h-6 rounded-full flex items-center justify-center shrink-0 mt-0.5" style="background:color-mix(in srgb,var(--gold) 15%,transparent)"><i class="fa-solid fa-cross" style="font-size:6px;color:var(--gold)"></i></div><div class="tdots"><div class="tdot animate-dot1"></div><div class="tdot animate-dot2"></div><div class="tdot animate-dot3"></div></div></div>`);scD();}
+function hideTy(){$('typ')?.remove();}
+async function streamAI(){ST.streaming=true;const ctrl=new AbortController();ST.abort=ctrl;
+const res=await fetch(CFG.URL,{method:'POST',headers:{'Content-Type':'application/json','Authorization':`Bearer ${CFG.KEY}`},signal:ctrl.signal,
+body:JSON.stringify({model:CFG.MODEL,messages:[{role:'system',content:SYS},...ST.convo.slice(-12)],stream:true,max_tokens:1200,temperature:.75})});
+hideTy();iHide();if(!res.ok)throw new Error('API '+res.status);
+const el=document.createElement('div');el.className='flex gap-2.5 w-full animate-up mt-2';
+el.innerHTML=`<div class="w-6 h-6 rounded-full flex items-center justify-center shrink-0 mt-0.5" style="background:color-mix(in srgb,var(--gold) 15%,transparent);border:1px solid color-mix(in srgb,var(--gold) 8%,transparent)"><i class="fa-solid fa-cross" style="font-size:6px;color:var(--gold)"></i></div><div class="flex-1 min-w-0"><div class="text-[14px] leading-relaxed" id="sout"><span class="stream-c"></span></div></div>`;
+$('cv').appendChild(el);const out=$('sout');let full='';const rd=res.body.getReader(),dc=new TextDecoder();let buf='';
+try{while(true){const{done,value}=await rd.read();if(done)break;buf+=dc.decode(value,{stream:true});const ls=buf.split('\n');buf=ls.pop()||'';
+for(const ln of ls){const tr=ln.trim();if(!tr||tr==='data: [DONE]'||!tr.startsWith('data: '))continue;
+try{const d=JSON.parse(tr.slice(6)).choices?.[0]?.delta?.content;if(d){full+=d;out.innerHTML=fmd(full)+'<span class="stream-c"></span>';scD();}}catch(e){}}}}
+finally{out.removeAttribute('id');out.innerHTML=fmd(full);ST.convo.push({role:'assistant',content:full});ST.streaming=false;ST.abort=null;
+const w=document.createElement('div');w.className='flex flex-wrap gap-1.5 mt-3';
+w.innerHTML=`<button class="cact" onclick="doSave('reflection',this)"><i class="fa-regular fa-bookmark"></i> Save</button><button class="cact" onclick="promptAI('Turn your last response into a personal prayer for me')"><i class="fa-solid fa-hands-praying" style="font-size:9px"></i> Pray This</button><button class="cact" onclick="promptAI('Go deeper — cross-references and application')"><i class="fa-solid fa-arrow-down" style="font-size:9px"></i> Deeper</button><button class="cact" onclick="promptAI('Create a 3-day study plan from what we discussed')"><i class="fa-solid fa-road" style="font-size:9px"></i> Study Plan</button>`;
+el.querySelector('.flex-1').appendChild(w);scD();}}
+function doSave(type,btn){const last=ST.convo[ST.convo.length-1];if(last?.role==='assistant'){
+saved.push({type,text:last.content.substring(0,500),date:new Date().toISOString()});localStorage.uf_sv=JSON.stringify(saved);
+if(btn){btn.innerHTML='<i class="fa-solid fa-check"></i> Saved';btn.style.color='var(--gold)';btn.style.borderColor='var(--gold)';}iMsg('Saved ♡',2e3);}}
+function doSaveVerse(t,r){if(!saved.find(s=>s.ref===r)){saved.push({type:'verse',text:t,ref:r,date:new Date().toISOString()});localStorage.uf_sv=JSON.stringify(saved);}iMsg('Verse saved ♡',2e3);}
+function rUser(t){$('cv').insertAdjacentHTML('beforeend',`<div class="w-full flex justify-end animate-up mt-2"><div class="px-4 py-2.5 rounded-[1.25rem] rounded-tr-sm text-[14px] font-medium max-w-[82%] shadow-sm" style="background:var(--gold);color:var(--bg)">${esc(t)}</div></div>`);scD();}
+function botMsg(h){$('cv').insertAdjacentHTML('beforeend',`<div class="flex gap-2.5 w-full animate-up mt-2"><div class="w-6 h-6 rounded-full flex items-center justify-center shrink-0 mt-0.5" style="background:color-mix(in srgb,var(--gold) 15%,transparent)"><i class="fa-solid fa-cross" style="font-size:6px;color:var(--gold)"></i></div><div class="flex-1 text-[14px] leading-relaxed min-w-0">${h}</div></div>`);scD();}
+function scD(){window.scrollTo({top:document.body.scrollHeight,behavior:'smooth'});}
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/'/g,'&#39;').replace(/"/g,'&quot;');}
+function fmd(t){return t.replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>').replace(/\*(.+?)\*/g,'<em>$1</em>')
+.replace(/`(.+?)`/g,'<code style="background:var(--s3);padding:1px 5px;border-radius:4px;font-size:13px;color:var(--gold)">$1</code>')
+.replace(/^### (.+)$/gm,'<strong style="display:block;margin:8px 0 2px;color:var(--cream)">$1</strong>')
+.replace(/^## (.+)$/gm,'<strong style="display:block;font-family:Cormorant Garamond,serif;font-size:17px;margin:10px 0 3px;color:var(--cream)">$1</strong>')
+.replace(/^> (.+)$/gm,'<blockquote style="border-left:2px solid color-mix(in srgb,var(--gold) 30%,transparent);padding-left:12px;margin:6px 0;font-style:italic;font-family:Cormorant Garamond,serif;font-size:15px;color:var(--cream)">$1</blockquote>')
+.replace(/^- (.+)$/gm,'<div style="display:flex;gap:5px;margin:2px 0"><span style="color:var(--gold)">·</span><span>$1</span></div>')
+.replace(/\n\n/g,'<br><br>').replace(/\n/g,'<br>');}
+/* Journey */
+function rJCard(){$('jcard').innerHTML=`<div class="flex items-center justify-between mb-3"><div class="w-9 h-9 rounded-xl flex items-center justify-center" style="background:color-mix(in srgb,var(--gold) 10%,transparent)"><i class="fa-solid fa-road text-sm" style="color:var(--gold)"></i></div><span class="text-[10px] font-bold rounded-full px-2 py-0.5" style="background:color-mix(in srgb,var(--sage) 10%,transparent);color:var(--sage)">Day ${journey.day}/${journey.total}</span></div><p class="text-[10px] uppercase tracking-widest font-bold" style="color:var(--mt)">Reading Journey</p><h3 class="font-display font-bold text-lg mt-0.5" style="color:var(--cream)">Book of ${journey.book}</h3><p class="text-xs mt-1" style="color:var(--mt)">${journey.current}</p><div class="mt-3 h-1.5 rounded-full overflow-hidden" style="background:var(--s3)"><div class="h-full rounded-full" style="width:${Math.round(journey.day/journey.total*100)}%;background:linear-gradient(90deg,var(--sage),var(--gold))"></div></div>`;}
+function advJ(){if(journey.day<journey.total){journey.day++;journey.current=journey.book+' — Day '+journey.day;localStorage.uf_jn=JSON.stringify(journey);rJCard();iMsg('Day '+journey.day+' ✓',2e3);}}
+/* Study */
+function rStudy(){
+$('study-j').innerHTML=`<div class="pcard"><div class="flex items-center justify-between mb-2"><h4 class="font-semibold text-sm" style="color:var(--cream)">Journey: ${journey.book}</h4><span class="text-[10px] font-bold" style="color:var(--sage)">Day ${journey.day}/${journey.total}</span></div><div class="h-1.5 rounded-full overflow-hidden mb-3" style="background:var(--s3)"><div class="h-full rounded-full" style="width:${Math.round(journey.day/journey.total*100)}%;background:linear-gradient(90deg,var(--sage),var(--gold))"></div></div><div class="flex gap-2"><button class="chip text-[11px]" onclick="promptAI('Continue my ${journey.book} journey — Day ${journey.day}')">Continue</button><button class="chip text-[11px]" onclick="advJ()">✓ Complete Day</button></div></div>`;
+$('bks').innerHTML=BOOKS.map(b=>`<button class="text-[10px] sm:text-[11px] font-medium py-1.5 px-1 rounded-lg text-center truncate transition" style="background:var(--s2);border:1px solid var(--bd);color:var(--mt)" onmouseenter="this.style.borderColor='color-mix(in srgb,var(--gold) 25%,transparent)';this.style.color='var(--cream)'" onmouseleave="this.style.borderColor='var(--bd)';this.style.color='var(--mt)'" onclick="promptAI('Overview of ${b} — author, date, purpose, themes, outline')">${b}</button>`).join('');
+$('stupr').innerHTML=[['Character Study','Deep dive into a biblical character'],['Word Study','Hebrew/Greek meaning of a key word'],['Topical Study','What the whole Bible says about a topic'],['Book Overview','Complete overview of any book']].map(([t,d])=>`<div class="pcard cursor-pointer flex items-center gap-3" onclick="promptAI('${d}')"><div class="w-7 h-7 rounded-lg flex items-center justify-center shrink-0" style="background:color-mix(in srgb,var(--gold) 8%,transparent)"><i class="fa-solid fa-graduation-cap text-xs" style="color:var(--gold)"></i></div><div><div class="font-semibold text-sm" style="color:var(--cream)">${t}</div><div class="text-xs" style="color:var(--mt)">${d}</div></div></div>`).join('');}
+/* Pray */
+function rPray(){
+$('pchips').innerHTML=[['Strength','Prayer for strength and courage'],['Gratitude','Prayer of deep gratitude'],['Family','Blessing over my family'],['Guidance','Prayer for a decision'],['Healing','Prayer for healing'],['Forgiveness','Prayer about forgiving someone']].map(([l,q])=>`<div class="chip text-[11px]" onclick="promptAI('${q}')">${l}</div>`).join('');
+if(!prayers.length){$('pjrn').innerHTML=`<div class="text-center py-8"><i class="fa-solid fa-hands-praying text-2xl mb-2" style="color:var(--dm)"></i><p class="text-sm" style="color:var(--mt)">Prayer journal is empty.</p><p class="text-xs mt-1" style="color:var(--dm)">Prayers saved from conversations appear here.</p></div>`;}
+else{$('pjrn').innerHTML=prayers.map((p,i)=>`<div class="pcard mb-2"><p class="text-sm leading-relaxed">${esc(p.text).substring(0,250)}${p.text.length>250?'…':''}</p><div class="flex items-center justify-between mt-2"><span class="text-[10px]" style="color:var(--dm)">${new Date(p.date).toLocaleDateString('en-US',{month:'short',day:'numeric'})}</span><div class="flex gap-3"><button class="text-[10px] font-semibold" style="color:var(--gold)" onclick="promptAI('Continue this prayer: ${esc(p.text.substring(0,80))}')">Continue</button><button class="text-[10px]" style="color:var(--dm)" onclick="prayers.splice(${i},1);localStorage.uf_pr=JSON.stringify(prayers);rPray()">Remove</button></div></div></div>`).join('');}}
+/* Sermons */
+function rSermons(){
+$('sfull').innerHTML=SERMONS.map(s=>{const cv=`var(--${s.c})`;return`<div class="pcard mb-3"><div class="flex items-center gap-3 mb-3"><div class="w-12 h-12 rounded-xl flex items-center justify-center shrink-0" style="background:color-mix(in srgb,${cv} 12%,transparent)"><i class="fa-solid fa-play text-xs" style="color:${cv}"></i></div><div class="flex-1 min-w-0"><div class="font-semibold" style="color:var(--cream)">${s.title}</div><div class="text-xs" style="color:var(--mt)">${s.pastor} · ${s.book}</div><div class="text-[10px] mt-0.5" style="color:var(--dm)">${s.date} · ${s.dur}</div></div></div><div class="flex flex-wrap gap-1 mb-3">${s.verses.map(v=>`<span class="text-[10px] font-bold px-2 py-0.5 rounded-full" style="background:color-mix(in srgb,${cv} 8%,transparent);color:${cv};border:1px solid color-mix(in srgb,${cv} 12%,transparent)">${v}</span>`).join('')}</div><div class="flex gap-2"><button class="chip text-[11px]" onclick="promptAI('Summarize \\x27${s.title}\\x27 by ${s.pastor} from ${s.book}: theme, 3 key points, key verses, reflection questions')">AI Summary</button><button class="chip text-[11px]" onclick="promptAI('Study path for \\x27${s.title}\\x27 — ${s.book}')">Study Path</button></div></div>`;}).join('')+
+`<div class="pcard mt-4 text-center"><i class="fa-solid fa-church text-xl mb-2" style="color:var(--gold)"></i><h3 class="font-semibold" style="color:var(--cream)">Unity Beam for Churches</h3><p class="text-xs mt-1 leading-relaxed" style="color:var(--mt)">Pastors publish → auto verse detection → AI summaries → congregation study paths.</p></div>`;}
+function sCard(s){const cv=`var(--${s.c})`;return`<div class="gl p-3.5 rounded-2xl cursor-pointer" onclick="promptAI('Summarize \\x27${s.title}\\x27 by ${s.pastor} from ${s.book}')"><div class="flex items-center gap-3"><div class="w-10 h-10 rounded-xl flex items-center justify-center shrink-0" style="background:color-mix(in srgb,${cv} 10%,transparent)"><i class="fa-solid fa-play text-[10px]" style="color:${cv}"></i></div><div class="min-w-0"><div class="font-semibold text-sm truncate" style="color:var(--cream)">${s.title}</div><div class="text-xs" style="color:var(--mt)">${s.pastor}</div><div class="text-[10px]" style="color:var(--dm)">${s.date}</div></div></div></div>`;}
+/* Saved */
+function rSaved(){
+$('scnt').textContent=saved.length+' moment'+(saved.length!==1?'s':'');
+if(!saved.length){$('slst').innerHTML=`<div class="text-center py-10"><i class="fa-solid fa-bookmark text-xl mb-2" style="color:var(--dm)"></i><h3 class="font-display text-lg font-bold" style="color:var(--cream)">No saved moments</h3><p class="text-sm mt-1" style="color:var(--mt)">Save verses, prayers, and reflections as you explore.</p></div>`;return;}
+$('slst').innerHTML=saved.map((s,i)=>{const ic=s.type==='verse'?'fa-book-bible':s.type==='prayer'?'fa-hands-praying':'fa-bookmark';const lb=s.ref||s.type||'Reflection';
+return`<div class="pcard mb-2"><div class="flex items-center gap-2 mb-2"><i class="fa-solid ${ic} text-xs" style="color:var(--gold)"></i><span class="text-[10px] font-bold uppercase tracking-wide" style="color:var(--gold)">${esc(lb)}</span><span class="text-[10px] ml-auto" style="color:var(--dm)">${new Date(s.date).toLocaleDateString('en-US',{month:'short',day:'numeric'})}</span></div><p class="text-sm leading-relaxed ${s.type==='verse'?'verse-t':''}">${esc(s.text).substring(0,250)}${s.text.length>250?'…':''}</p><div class="flex gap-3 mt-2"><button class="text-[10px] font-semibold" style="color:var(--gold)" onclick="promptAI('Reflect on: ${esc(s.text.substring(0,80))}')">Reflect</button><button class="text-[10px] font-semibold" style="color:var(--mt)" onclick="promptAI('Turn into a prayer: ${esc(s.text.substring(0,80))}')">Pray</button><button class="text-[10px] ml-auto" style="color:var(--dm)" onclick="saved.splice(${i},1);localStorage.uf_sv=JSON.stringify(saved);rSaved()">Remove</button></div></div>`;}).join('');}
+/* Unity in the City Event */
+function openEvent(){
+$('cp-t').textContent='Unity in the City 2026';$('cp-s').textContent='Flagship Event';$('cp').classList.add('open');document.body.style.overflow='hidden';
+$('cp-b').innerHTML=`
+<div class="rounded-2xl overflow-hidden mb-5 relative" style="background:linear-gradient(135deg,#1a0a2e,#2d1150,#4a1a6b)">
+  <div class="absolute inset-0 opacity-30" style="background:radial-gradient(circle at 70% 20%,rgba(255,200,50,.4),transparent 60%),radial-gradient(circle at 20% 80%,rgba(180,80,255,.3),transparent 50%)"></div>
+  <div class="relative z-10 px-6 py-8 text-center">
+    <span class="text-[10px] font-bold uppercase tracking-[.15em] px-3 py-1 rounded-full inline-block mb-4" style="background:rgba(255,200,50,.15);color:#FFD040;border:1px solid rgba(255,200,50,.2)">Saturday · August 16, 2026</span>
+    <h1 class="font-display text-3xl sm:text-4xl font-bold text-white mb-2 leading-tight">Unity in the City</h1>
+    <p class="text-sm text-white/60 mb-1">National Stadium · Kingston, Jamaica</p>
+    <p class="text-xs text-white/40">Gates Open 4:00 PM · Show Starts 6:00 PM</p>
+  </div>
+</div>
+<p class="text-sm leading-relaxed mb-5" style="color:var(--txt)">Kingston's premier non-denominational Christian gospel mega-event returns for 2026. Live worship, comedy, dance, and powerful ministry — bringing together thousands for a night of unity, praise, and transformation.</p>
+<h4 class="text-[10px] font-bold uppercase tracking-widest mb-3" style="color:var(--mt)">Get Your Tickets</h4>
+<div class="flex flex-col gap-2 mb-6" id="tix-list">
+${[['General Admission','J$3,500','Access to all general areas','ga'],['VIP','J$8,000','Priority entry · VIP seating · Gift bag','vip'],['VVIP','J$15,000','Front stage · Backstage meet & greet · Lounge','vvip'],['Group of 10+','J$2,800 each','10% discount · Group seating','group']].map(([n,p,d,k])=>`
+<div class="pcard flex items-center gap-4 cursor-pointer" onclick="selectTix('${k}','${n}','${p}')">
+  <div class="flex-1"><div class="font-semibold text-sm" style="color:var(--cream)">${n}</div><div class="text-xs mt-0.5" style="color:var(--mt)">${d}</div></div>
+  <div class="text-right shrink-0"><div class="font-bold text-sm" style="color:var(--gold)">${p}</div><button class="text-[10px] font-bold mt-1 px-3 py-1 rounded-full transition" style="background:color-mix(in srgb,var(--gold) 12%,transparent);color:var(--gold);border:1px solid color-mix(in srgb,var(--gold) 20%,transparent)">Select</button></div>
+</div>`).join('')}
+</div>
+<h4 class="text-[10px] font-bold uppercase tracking-widest mb-3" style="color:var(--mt)">What to Expect</h4>
+<div class="grid grid-cols-2 gap-2 mb-5">
+${[['🎤','Live Worship','Top local & international gospel artists'],['😂','Comedy','Clean comedy and spoken word'],['💃','Dance','Praise dance & choreography'],['🙏','Ministry','Powerful altar call & prayer']].map(([e,t,d])=>`<div class="pcard text-center"><div class="text-2xl mb-2">${e}</div><div class="font-semibold text-sm" style="color:var(--cream)">${t}</div><div class="text-xs mt-0.5" style="color:var(--mt)">${d}</div></div>`).join('')}
+</div>
+<div class="pcard text-center">
+  <p class="text-xs leading-relaxed" style="color:var(--mt)">Unity in the City is more than a concert — it's a <strong style="color:var(--cream)">movement</strong> to unite Jamaica for the glory of God. 20,000+ attendees. One purpose.</p>
+  <p class="text-xs mt-2" style="color:var(--dm)">Organized by Unity Faith · Follow @unityinthecity</p>
+</div>`;
+}
+function selectTix(k,name,price){
+const form=document.createElement('div');form.innerHTML=`
+<div class="pcard mb-4" style="border-color:color-mix(in srgb,var(--gold) 25%,transparent)">
+  <div class="flex items-center justify-between mb-4"><h3 class="font-semibold" style="color:var(--cream)">${name}</h3><span class="font-bold" style="color:var(--gold)">${price}</span></div>
+  <div class="flex flex-col gap-3">
+    <div><label class="text-[10px] font-bold uppercase tracking-wider block mb-1" style="color:var(--dm)">Full Name</label><input type="text" class="w-full rounded-xl px-3 py-2.5 text-sm outline-none transition" style="background:var(--s3);border:1px solid var(--bd);color:var(--cream)" placeholder="Your name"></div>
+    <div><label class="text-[10px] font-bold uppercase tracking-wider block mb-1" style="color:var(--dm)">Email</label><input type="email" class="w-full rounded-xl px-3 py-2.5 text-sm outline-none transition" style="background:var(--s3);border:1px solid var(--bd);color:var(--cream)" placeholder="you@email.com"></div>
+    <div><label class="text-[10px] font-bold uppercase tracking-wider block mb-1" style="color:var(--dm)">Phone</label><input type="tel" class="w-full rounded-xl px-3 py-2.5 text-sm outline-none transition" style="background:var(--s3);border:1px solid var(--bd);color:var(--cream)" placeholder="876-555-0000"></div>
+    <div class="flex items-center gap-3"><label class="text-[10px] font-bold uppercase tracking-wider" style="color:var(--dm)">Qty</label><select class="rounded-lg px-3 py-2 text-sm outline-none" style="background:var(--s3);border:1px solid var(--bd);color:var(--cream)"><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>8</option><option>10</option></select></div>
+    <button onclick="this.textContent='✓ Ticket Reserved!';this.style.opacity='.7';this.disabled=true;setTimeout(()=>{iMsg('Ticket confirmed! 🎉',3000)},300)" class="w-full py-3 rounded-xl font-bold text-sm transition" style="background:var(--gold);color:var(--bg)">Purchase Ticket — ${price}</button>
+  </div>
+</div>`;
+$('tix-list').innerHTML='';$('tix-list').appendChild(form);form.scrollIntoView({behavior:'smooth'});}
+function cpClose(){$('cp').classList.remove('open');document.body.style.overflow='';}
+init();
+</script>
+</body>
+</html>
