@@ -1646,8 +1646,7 @@ let radioPlaying=false,radioAudio=null;
 function initRadio(){
   if(radioAudio)return;
   radioAudio=new Audio();
-  radioAudio.crossOrigin='anonymous';
-  radioAudio.onerror=()=>{setRadioStatus('error');};
+  radioAudio.onerror=()=>{setRadioStatus('error');if(radioPlaying)showZenoEmbed();};
   radioAudio.onplaying=()=>{setRadioStatus('playing');};
   radioAudio.onwaiting=()=>{setRadioStatus('buffering');};
   radioAudio.onstalled=()=>{setRadioStatus('buffering');};
@@ -1664,7 +1663,7 @@ function setRadioStatus(s){
 function toggleRadio(){
   if(radioPlaying){
     radioPlaying=false;
-    // Hide the Zeno iframe and restore play button
+    if(radioAudio){radioAudio.pause();radioAudio.src='';}
     const frame=$('radio-zeno-frame');
     if(frame){frame.style.display='none';frame.innerHTML='';}
     const stopRow=$('radio-stop-row');if(stopRow)stopRow.style.display='none';
@@ -1672,15 +1671,39 @@ function toggleRadio(){
     setRadioStatus('idle');
   }else{
     radioPlaying=true;
-    // Hide play button, show Zeno iframe (auto-plays)
+    initRadio();
+    setRadioStatus('buffering');
     const ctrl=$('radio-play-ctrl');if(ctrl)ctrl.style.display='none';
-    setRadioStatus('playing');
     const stopRow=$('radio-stop-row');if(stopRow)stopRow.style.display='flex';
-    const frame=$('radio-zeno-frame');
-    if(frame){
-      frame.style.display='block';
-      frame.innerHTML='<iframe src="https://player.zeno.fm/0xYWd4emZucGxibTh0YzNSaGRITnlNZ3NTQ2tGMWRHaERiR2xsYm5RWWdJQ0F4TmE1eFFzTUN4SU9VM1JoZEdsdmJsQnliMlpwYkdVWWdJQ0FnTzZzaEFvTW9nRUVlbVZ1Ync=" style="width:100%;height:155px;border:none;border-radius:16px;display:block" allow="autoplay" title="KLAS Omega 89 FM"></iframe>';
+    // Try direct stream first, fall back to Zeno iframe
+    const streams=[
+      'https://stream.zeno.fm/klas-omega-radio',
+      'https://stream.zeno.fm/omegafm89-radio',
+      'https://stream.zeno.fm/klas-omega-radio?_='+Date.now()
+    ];
+    let tried=0;
+    function tryStream(){
+      if(tried>=streams.length){
+        // All streams failed — show Zeno embed iframe instead
+        showZenoEmbed();return;
+      }
+      radioAudio.src=streams[tried++];
+      radioAudio.load();
+      const p=radioAudio.play();
+      if(p!==undefined){
+        p.then(()=>{}).catch(()=>{setTimeout(tryStream,1200);});
+      }
     }
+    tryStream();
+  }
+}
+function showZenoEmbed(){
+  if(radioAudio){radioAudio.pause();radioAudio.src='';}
+  setRadioStatus('playing');
+  const frame=$('radio-zeno-frame');
+  if(frame){
+    frame.style.display='block';
+    frame.innerHTML='<iframe src="https://zeno.fm/radio/klas-omega-radio/?embed=true" style="width:100%;height:180px;border:none;border-radius:16px;display:block" allow="autoplay" title="KLAS Omega 89 FM" loading="lazy"></iframe>';
   }
 }
 function rRadio(){
