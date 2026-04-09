@@ -35,8 +35,8 @@ border:1px solid color-mix(in srgb,var(--gold) 12%,transparent);color:var(--mt);
 .chip-primary{padding:8px 18px;border-radius:100px;font-size:13px;font-weight:600;background:color-mix(in srgb,var(--gold) 18%,transparent);
 border:1px solid color-mix(in srgb,var(--gold) 30%,transparent);color:var(--cream);cursor:pointer;transition:all .15s;white-space:nowrap;}
 .chip-primary:hover{background:color-mix(in srgb,var(--gold) 28%,transparent);border-color:var(--gold);}
- 
- 
+
+
 .bible-section-hd{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--mt);padding:8px 0 6px;margin-top:8px;}
 /* Sermon video thumbnail */
 .sermon-thumb-lg{width:100%;aspect-ratio:16/9;border-radius:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden;position:relative;}
@@ -98,10 +98,10 @@ background:color-mix(in srgb,var(--gold) 14%,transparent);color:var(--gold);bord
 .upgrade-sheet.open{transform:translateY(0);}
 .upgrade-overlay{position:fixed;inset:0;z-index:299;background:rgba(0,0,0,.5);opacity:0;pointer-events:none;transition:opacity .3s;}
 .upgrade-overlay.open{opacity:1;pointer-events:all;}
- 
- 
- 
- 
+
+
+
+
 /* ═══ TICKET TIERS ═══ */
 .tix-scroll{display:flex;gap:12px;overflow-x:auto;padding:4px 0 16px;scrollbar-width:none;}
 .tix-scroll::-webkit-scrollbar{display:none;}
@@ -121,7 +121,221 @@ background:color-mix(in srgb,var(--gold) 14%,transparent);color:var(--gold);bord
 .tix-btn:hover{opacity:.85;}
 /* shimmer on ultimate */
 .tix-card.tier-ult::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,200,80,.04) 0%,rgba(180,80,255,.06) 100%);pointer-events:none;}
- 
+
+
+/* ═══ ANIMATED HEAVENLY GRADIENTS ═══ */
+@keyframes heaven-shift {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+@keyframes orb-drift {
+  0%,100% { transform: translate(0,0) scale(1); opacity:.6; }
+  33%      { transform: translate(30px,-20px) scale(1.15); opacity:.9; }
+  66%      { transform: translate(-20px,25px) scale(.9); opacity:.5; }
+}
+@keyframes orb-drift2 {
+  0%,100% { transform: translate(0,0) scale(1); opacity:.5; }
+  40%      { transform: translate(-35px,20px) scale(1.2); opacity:.8; }
+  70%      { transform: translate(25px,-30px) scale(.85); opacity:.4; }
+}
+@keyframes shimmer-sweep {
+  0%   { transform: translateX(-100%) skewX(-15deg); }
+  100% { transform: translateX(300%) skewX(-15deg); }
+}
+@keyframes tix-in {
+  0%   { opacity:0; transform:translateY(24px); }
+  100% { opacity:1; transform:translateY(0); }
+}
+
+/* ═══ TICKET DETAIL PANEL ═══ */
+/* ═══ TICKET DETAIL PANEL — GRADIENT IS THE PAGE ═══ */
+#tix-detail-panel {
+  position:fixed; inset:0; z-index:250;
+  display:none; flex-direction:column;
+  overflow:hidden;
+}
+#tix-detail-panel.open { display:flex; }
+
+/* The animated gradient fills the ENTIRE panel — it IS the background */
+.tdp-bg-full {
+  position:fixed; inset:0; z-index:0;
+  background-size:300% 300%;
+  transition:background .6s ease;
+}
+.tdp-bg-full.animated {
+  animation: heaven-shift 8s ease infinite;
+}
+/* dark overlay so text stays readable over bright gradients */
+.tdp-overlay {
+  position:fixed; inset:0; z-index:1; pointer-events:none;
+  background:linear-gradient(
+    to bottom,
+    rgba(0,0,0,.25) 0%,
+    rgba(0,0,0,.45) 40%,
+    rgba(0,0,0,.72) 100%
+  );
+}
+.tdp-orb {
+  position:fixed; border-radius:50%;
+  filter:blur(80px); pointer-events:none; z-index:1;
+}
+.tdp-orb-1 { animation: orb-drift 7s ease-in-out infinite; }
+.tdp-orb-2 { animation: orb-drift2 9s ease-in-out infinite; }
+.tdp-shimmer {
+  position:fixed; inset:0; z-index:2; pointer-events:none; overflow:hidden;
+}
+.tdp-shimmer::after {
+  content:''; position:absolute; top:0; left:0;
+  width:50%; height:100%;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.05),transparent);
+  animation: shimmer-sweep 5s ease-in-out infinite;
+}
+
+/* Scrollable content sits above everything */
+.tdp-scroll {
+  position:relative; z-index:10;
+  flex:1; overflow-y:auto; overflow-x:hidden;
+  scroll-behavior:smooth;
+}
+/* Safe scrollbar */
+.tdp-scroll::-webkit-scrollbar{width:3px;}
+.tdp-scroll::-webkit-scrollbar-thumb{background:rgba(255,255,255,.15);border-radius:2px;}
+
+/* Back button — top left, always above gradient */
+.tdp-back {
+  position:fixed; top:16px; left:16px; z-index:20;
+  width:38px; height:38px; border-radius:50%;
+  background:rgba(0,0,0,.35); backdrop-filter:blur(16px);
+  border:1px solid rgba(255,255,255,.18);
+  display:flex; align-items:center; justify-content:center;
+  cursor:pointer; color:white; font-size:14px;
+  transition:background .2s;
+}
+.tdp-back:hover { background:rgba(0,0,0,.55); }
+
+/* Hero header inside scroll */
+.tdp-header {
+  padding:72px 24px 32px;
+  text-align:left;
+}
+.tdp-tag {
+  display:inline-block; font-size:10px; font-weight:800;
+  letter-spacing:.12em; text-transform:uppercase;
+  padding:5px 14px; border-radius:100px; margin-bottom:14px;
+  border:1px solid rgba(255,255,255,.25);
+  background:rgba(255,255,255,.12); color:rgba(255,255,255,.95);
+  backdrop-filter:blur(8px);
+}
+.tdp-title {
+  font-family:'Cormorant Garamond',serif;
+  font-size:40px; font-weight:700; line-height:1.05;
+  color:white; margin-bottom:8px; text-shadow:0 2px 20px rgba(0,0,0,.4);
+}
+.tdp-price {
+  font-family:'Cormorant Garamond',serif;
+  font-size:30px; font-weight:700; color:rgba(255,255,255,.9);
+  text-shadow:0 1px 12px rgba(0,0,0,.3);
+}
+
+/* Content sections — glass cards over gradient */
+.tdp-card {
+  margin:0 16px 12px;
+  background:rgba(0,0,0,.32);
+  backdrop-filter:blur(20px);
+  -webkit-backdrop-filter:blur(20px);
+  border:1px solid rgba(255,255,255,.1);
+  border-radius:20px;
+  padding:20px;
+}
+.tdp-section-label {
+  font-size:10px; font-weight:800; letter-spacing:.12em;
+  text-transform:uppercase; color:rgba(255,255,255,.45); margin-bottom:12px;
+}
+.tdp-desc {
+  font-size:15px; line-height:1.75; color:rgba(255,255,255,.85);
+}
+.tdp-perk {
+  display:flex; align-items:flex-start; gap:12px;
+  padding:13px 0; border-bottom:1px solid rgba(255,255,255,.08);
+}
+.tdp-perk:last-child { border-bottom:none; }
+.tdp-perk-icon {
+  width:38px; height:38px; border-radius:11px; flex-shrink:0;
+  display:flex; align-items:center; justify-content:center; font-size:17px;
+  background:rgba(255,255,255,.1);
+}
+.tdp-perk-name { font-size:14px; font-weight:600; color:white; margin-bottom:3px; }
+.tdp-perk-sub  { font-size:12px; color:rgba(255,255,255,.6); line-height:1.5; }
+
+/* Form inputs — glass style */
+.tdp-input {
+  width:100%; border-radius:14px; padding:14px 16px;
+  font-size:15px; outline:none; margin-bottom:11px;
+  background:rgba(0,0,0,.3);
+  backdrop-filter:blur(12px);
+  border:1.5px solid rgba(255,255,255,.15);
+  color:white;
+  transition:border-color .15s;
+}
+.tdp-input::placeholder { color:rgba(255,255,255,.35); }
+.tdp-input:focus { border-color:rgba(255,255,255,.5); }
+.tdp-select {
+  appearance:none; width:100%;
+  border-radius:14px; padding:14px 16px;
+  font-size:15px; outline:none; margin-bottom:11px;
+  background:rgba(0,0,0,.3); backdrop-filter:blur(12px);
+  border:1.5px solid rgba(255,255,255,.15); color:white;
+}
+.tdp-buy {
+  width:100%; padding:17px; border-radius:16px;
+  font-size:16px; font-weight:700; cursor:pointer; border:none;
+  transition:opacity .2s, transform .15s;
+  margin-top:4px; letter-spacing:.01em;
+}
+.tdp-buy:hover { opacity:.88; transform:translateY(-1px); }
+.tdp-buy:active { transform:scale(.98); }
+
+/* Sponsor bar */
+.tdp-sponsors {
+  margin:0 16px 32px;
+  background:rgba(0,0,0,.3);
+  backdrop-filter:blur(20px);
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:20px;
+  padding:20px 24px;
+  text-align:center;
+}
+.tdp-sponsor-label {
+  font-size:9px; font-weight:800; letter-spacing:.15em;
+  text-transform:uppercase; color:rgba(255,255,255,.3); margin-bottom:16px;
+}
+.tdp-sponsor-logos {
+  display:flex; align-items:center; justify-content:center;
+  gap:24px; flex-wrap:wrap;
+}
+.tdp-logo {
+  display:flex; flex-direction:column; align-items:center; gap:6px;
+}
+.tdp-logo-mark {
+  width:56px; height:56px; border-radius:14px;
+  display:flex; align-items:center; justify-content:center;
+  border:1px solid rgba(255,255,255,.15);
+  background:rgba(255,255,255,.08);
+  backdrop-filter:blur(8px);
+  font-size:22px;
+}
+.tdp-logo-name {
+  font-size:10px; font-weight:700; color:rgba(255,255,255,.5);
+  letter-spacing:.04em; text-align:center; max-width:80px; line-height:1.3;
+}
+.tdp-divider {
+  width:1px; height:48px; background:rgba(255,255,255,.12);
+}
+
+.tdp-anim { animation: tix-in .45s cubic-bezier(.16,1,.3,1) forwards; opacity:0; }
+.tdp-anim { animation: tix-in .45s cubic-bezier(.16,1,.3,1) forwards; opacity:0; }
+
 /* ═══ SPLASH ═══ */
 #splash{position:fixed;inset:0;z-index:999;background:var(--bg);display:flex;align-items:center;justify-content:center;flex-direction:column;transition:opacity .6s,transform .6s;}
 #splash.hide{opacity:0;transform:scale(1.02);pointer-events:none;}
@@ -131,7 +345,7 @@ opacity:0;transform:translateY(20px);animation:up .7s .1s cubic-bezier(.16,1,.3,
 #splash h1{opacity:0;transform:translateY(16px);animation:up .7s .3s cubic-bezier(.16,1,.3,1) forwards;}
 #splash p{opacity:0;animation:fade .6s .6s ease forwards;}
 #splash .sp-form{opacity:0;transform:translateY(12px);animation:up .6s .8s cubic-bezier(.16,1,.3,1) forwards;}
- 
+
 /* ═══ BOTTOM FADE — paints over scroll content ═══ */
 .bottom-fade{
   position:absolute;
@@ -151,7 +365,7 @@ opacity:0;transform:translateY(20px);animation:up .7s .1s cubic-bezier(.16,1,.3,
     height:200px;
   }
 }
- 
+
 /* ═══ LAYOUT ═══ */
 .shell{display:flex;height:100dvh;overflow:hidden;position:relative;}
 .sidebar{width:240px;height:100dvh;background:var(--s1);border-right:1px solid var(--bd);display:none;flex-direction:column;flex-shrink:0;overflow:hidden;}
@@ -186,11 +400,30 @@ color:var(--mt);cursor:pointer;transition:all .12s;width:100%;margin-bottom:2px;
 /* Pastor overlay */
 #pastor-panel{position:fixed;inset:0;z-index:210;display:none;flex-direction:column;background:var(--bg);}
 #pastor-panel.open{display:flex;}
+
+@keyframes eq1{0%,100%{height:6px}50%{height:20px}}
+@keyframes eq2{0%,100%{height:18px}50%{height:6px}}
+#tix-detail-panel.light-tier .tdp-bg-full{background:var(--bg)!important;}
+#tix-detail-panel.light-tier .tdp-overlay{background:none;}
+#tix-detail-panel.light-tier .tdp-header{padding-top:56px;}
+#tix-detail-panel.light-tier .tdp-tag{background:color-mix(in srgb,var(--gold) 12%,transparent)!important;color:var(--gold)!important;border:1px solid color-mix(in srgb,var(--gold) 20%,transparent);}
+#tix-detail-panel.light-tier .tdp-title{color:var(--cream)!important;}
+#tix-detail-panel.light-tier .tdp-price{color:var(--txt)!important;}
+#tix-detail-panel.light-tier .tdp-card{background:var(--s2);border-color:var(--bd);backdrop-filter:none;-webkit-backdrop-filter:none;}
+#tix-detail-panel.light-tier .tdp-section-label{color:var(--mt)!important;}
+#tix-detail-panel.light-tier .tdp-desc{color:var(--txt)!important;}
+#tix-detail-panel.light-tier .tdp-perk-name{color:var(--cream)!important;}
+#tix-detail-panel.light-tier .tdp-perk-sub{color:var(--mt)!important;}
+#tix-detail-panel.light-tier .tdp-perk{border-color:var(--bd)!important;}
+#tix-detail-panel.light-tier .tdp-input{background:var(--s1)!important;border-color:var(--bd)!important;color:var(--cream)!important;}
+#tix-detail-panel.light-tier .tdp-input::placeholder{color:var(--mt)!important;}
+#tix-detail-panel.light-tier .tdp-select{background:var(--s1)!important;border-color:var(--bd)!important;color:var(--cream)!important;}
+#tix-detail-panel.light-tier .tdp-back{background:var(--s2);border-color:var(--bd);color:var(--mt);}
 </style>
 </head>
 <body>
 <div class="ambient"></div>
- 
+
 <!-- ═══ SPLASH ═══ -->
 <div id="splash">
   <div class="sp-cross"><i class="fa-solid fa-cross text-2xl" style="color:var(--gold)"></i></div>
@@ -204,10 +437,10 @@ color:var(--mt);cursor:pointer;transition:all .12s;width:100%;margin-bottom:2px;
     <p class="text-xs text-center mt-4" style="color:var(--dm)">Your name is stored locally and never shared.</p>
   </div>
 </div>
- 
+
 <!-- ═══ APP SHELL ═══ -->
 <div class="shell" id="shell" style="opacity:0">
- 
+
 <!-- ═══ SIDEBAR (desktop) ═══ -->
 <aside class="sidebar" id="sidebar">
   <div class="sb-logo">
@@ -222,6 +455,7 @@ color:var(--mt);cursor:pointer;transition:all .12s;width:100%;margin-bottom:2px;
     <button class="sb-item" data-t="pray" onclick="goTab('pray')"><i class="fa-solid fa-hands-praying"></i>Pray</button>
     <button class="sb-item" data-t="sermons" onclick="goTab('sermons')"><i class="fa-solid fa-play-circle"></i>Sermons</button>
     <button class="sb-item" data-t="saved" onclick="goTab('saved')"><i class="fa-solid fa-bookmark"></i>Saved</button>
+    <button class="sb-item" data-t="radio" onclick="goTab('radio')"><i class="fa-solid fa-radio"></i>Radio</button>
     <div class="text-[11px] font-bold uppercase tracking-widest px-4 pt-6 pb-2" style="color:var(--dm)">Events</div>
     <button class="sb-item" onclick="openEvent()"><i class="fa-solid fa-ticket"></i>Unity in the City</button>
     <div class="text-[11px] font-bold uppercase tracking-widest px-4 pt-6 pb-2" style="color:var(--dm)">Settings</div>
@@ -244,18 +478,18 @@ color:var(--mt);cursor:pointer;transition:all .12s;width:100%;margin-bottom:2px;
     </div>
   </div>
 </aside>
- 
+
 <!-- ═══ CONTENT AREA ═══ -->
 <div class="content-area" id="content-area">
 <div class="content-inner" id="stage">
- 
+
 <!-- HOME -->
 <div class="page active" id="pg-home">
 <div class="mb-8 animate-up">
   <h1 class="font-display text-3xl sm:text-4xl lg:text-[2.75rem] font-bold tracking-tight leading-[1.12]" style="color:var(--cream)" id="greet"></h1>
   <p class="text-sm mt-3 font-medium flex items-center gap-2" style="color:var(--mt)"><i class="fa-solid fa-cross" style="font-size:8px;color:var(--gold)"></i> Scripture · Prayer · Study · Sermons</p>
 </div>
- 
+
 <!-- EVENT BANNER -->
 <div class="rounded-2xl overflow-hidden mb-8 cursor-pointer animate-up relative" style="animation-delay:.04s;background:linear-gradient(135deg,#1a0a2e,#2d1150,#4a1a6b);border:1px solid rgba(180,130,255,.15)" onclick="openEvent()">
   <div class="absolute inset-0 opacity-20" style="background:radial-gradient(circle at 80% 30%,rgba(255,200,50,.3),transparent 60%),radial-gradient(circle at 20% 80%,rgba(180,80,255,.2),transparent 50%)"></div>
@@ -270,12 +504,12 @@ color:var(--mt);cursor:pointer;transition:all .12s;width:100%;margin-bottom:2px;
         <span class="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full" style="background:rgba(255,255,255,.08);color:rgba(255,255,255,.6)">Tickets Live</span>
       </div>
       <h3 class="font-display font-bold text-lg sm:text-xl text-white leading-tight">Unity in the City</h3>
-      <p class="text-sm mt-1" style="color:rgba(255,255,255,.5)">National Stadium · Kingston · Worship · Revival</p>
+      <p class="text-sm mt-1" style="color:rgba(255,255,255,.5)">National Stadium · Kingston · Worship · Deliverance · Breakthrough</p>
     </div>
     <i class="fa-solid fa-chevron-right text-white/30 shrink-0 hidden sm:block"></i>
   </div>
 </div>
- 
+
 <!-- VOTD -->
 <div class="rounded-2xl overflow-hidden mb-8 cursor-pointer animate-up relative" style="animation-delay:.08s" onclick="promptAI('Help me reflect on '+VOTD.r+': '+VOTD.t)">
   <div class="absolute inset-0" style="background:linear-gradient(180deg,color-mix(in srgb,var(--gold) 4%,var(--s2)),var(--s2))"></div>
@@ -294,7 +528,7 @@ color:var(--mt);cursor:pointer;transition:all .12s;width:100%;margin-bottom:2px;
     </div>
   </div>
 </div>
- 
+
 <!-- Cards -->
 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8 animate-up" style="animation-delay:.12s">
   <div class="gl p-5 rounded-2xl cursor-pointer pcard-lift transition" style="transition:transform .18s,box-shadow .18s" onmouseenter="this.style.transform='translateY(-2px)';this.style.boxShadow='0 12px 36px -8px rgba(0,0,0,.3)'" onmouseleave="this.style.transform='';this.style.boxShadow=''" onclick="goTab('study')" id="jcard"></div>
@@ -308,13 +542,13 @@ color:var(--mt);cursor:pointer;transition:all .12s;width:100%;margin-bottom:2px;
     <p class="text-sm mt-1 leading-relaxed" style="color:var(--mt)">Unity-powered, scripture-grounded prayer.</p>
   </div>
 </div>
- 
+
 <!-- Topics -->
 <div class="mb-8 animate-up" style="animation-delay:.16s">
   <h4 class="text-xs font-bold uppercase tracking-widest mb-3" style="color:var(--mt)">Explore by Topic</h4>
   <div class="flex flex-wrap gap-2" id="topics-w"></div>
 </div>
- 
+
 <!-- Sermons preview -->
 <div class="animate-up" style="animation-delay:.2s">
   <div class="flex justify-between items-center mb-3">
@@ -324,37 +558,206 @@ color:var(--mt);cursor:pointer;transition:all .12s;width:100%;margin-bottom:2px;
   <div class="grid grid-cols-1 sm:grid-cols-2 gap-3" id="sprev"></div>
 </div>
 </div>
- 
+
 <!-- STUDY -->
 <div class="page" id="pg-study">
-<div class="flex items-center gap-3 mb-6"><div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background:color-mix(in srgb,var(--gold) 10%,transparent)"><i class="fa-solid fa-book-open text-lg" style="color:var(--gold)"></i></div><div><h2 class="font-display text-2xl sm:text-3xl font-bold" style="color:var(--cream)">Scripture & Study</h2></div></div>
-<div id="study-j" class="mb-6"></div>
-<h4 class="text-xs font-bold uppercase tracking-widest mb-3" style="color:var(--mt)">Browse Scripture</h4>
-<div id="bks"></div>
-<h4 class="text-xs font-bold uppercase tracking-widest mb-3 mt-2" style="color:var(--mt)">Guided Study</h4>
-<div class="flex flex-col gap-3" id="stupr"></div>
-</div>
- 
-<!-- PRAY -->
-<div class="page" id="pg-pray">
-<div class="flex items-center gap-3 mb-6"><div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background:color-mix(in srgb,var(--rose) 10%,transparent)"><i class="fa-solid fa-hands-praying text-lg" style="color:var(--rose)"></i></div><div><h2 class="font-display text-2xl sm:text-3xl font-bold" style="color:var(--cream)">Prayer Space</h2></div></div>
-<div class="flex flex-wrap gap-2 mb-6" id="pchips"></div>
-<h4 class="text-xs font-bold uppercase tracking-widest mb-3" style="color:var(--mt)">Saved Prayers</h4>
-<div id="pjrn"></div>
-</div>
- 
-<!-- SERMONS (v6 — rich video UI) -->
-<div class="page" id="pg-sermons">
-<div class="flex items-center gap-3 mb-4">
-  <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background:color-mix(in srgb,var(--sky) 10%,transparent)"><i class="fa-solid fa-play-circle text-lg" style="color:var(--sky)"></i></div>
-  <div class="flex-1">
-    <h2 class="font-display text-2xl sm:text-3xl font-bold" style="color:var(--cream)">Sermons</h2>
-    <p class="text-sm" style="color:var(--mt)">Unity Beam · Live & On-Demand</p>
+
+<!-- SCHOLAR IDENTITY CARD -->
+<div id="scholar-card" class="mb-4 rounded-2xl overflow-hidden relative cursor-pointer" style="background:linear-gradient(135deg,var(--s2),var(--s3));border:1px solid var(--bd)" onclick="openScholarProfile()">
+  <div class="absolute inset-0 opacity-30" style="background:radial-gradient(circle at 80% 20%,color-mix(in srgb,var(--gold) 30%,transparent),transparent 60%)"></div>
+  <div class="relative z-10 p-4 flex items-center gap-4">
+    <div id="scholar-avatar" class="w-14 h-14 rounded-2xl flex items-center justify-center text-2xl shrink-0" style="background:color-mix(in srgb,var(--gold) 12%,transparent);border:2px solid color-mix(in srgb,var(--gold) 20%,transparent)">🌱</div>
+    <div class="flex-1 min-w-0">
+      <div class="flex items-center gap-2 flex-wrap mb-1">
+        <span id="scholar-rank-badge" class="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full" style="background:color-mix(in srgb,var(--gold) 14%,transparent);color:var(--gold);border:1px solid color-mix(in srgb,var(--gold) 20%,transparent)">Seeker</span>
+        <span id="scholar-xp-label" class="text-[10px] font-semibold" style="color:var(--dm)">0 XP</span>
+      </div>
+      <div id="scholar-title" class="font-display text-lg font-bold" style="color:var(--cream)">Your Journey</div>
+      <div class="h-1.5 rounded-full mt-2 overflow-hidden" style="background:var(--s3)">
+        <div id="xp-bar" class="h-full rounded-full transition-all duration-700" style="background:linear-gradient(90deg,var(--gold),var(--sage));width:0%"></div>
+      </div>
+    </div>
+    <div class="text-right shrink-0">
+      <div id="scholar-streak" class="text-2xl font-display font-bold" style="color:var(--gold)">0</div>
+      <div class="text-[10px] font-bold uppercase tracking-wide" style="color:var(--dm)">day streak</div>
+    </div>
   </div>
 </div>
- 
-<!-- Filter bar -->
-<div class="filter-bar mb-5" id="sermon-filter-bar">
+
+<!-- ACTIVE QUESTS -->
+<div class="mb-4">
+  <div class="flex items-center justify-between mb-2">
+    <span class="text-[10px] font-bold uppercase tracking-widest" style="color:var(--dm)">Active Quests</span>
+    <button class="text-xs font-semibold" style="color:var(--gold)" onclick="openAllQuests()">View All →</button>
+  </div>
+  <div id="quest-row" class="flex flex-col gap-2"></div>
+</div>
+
+<!-- AWARDS SHELF -->
+<div class="mb-4">
+  <div class="flex items-center justify-between mb-2">
+    <span class="text-[10px] font-bold uppercase tracking-widest" style="color:var(--dm)">Awards</span>
+    <span id="award-count" class="text-[10px] font-semibold" style="color:var(--mt)"></span>
+  </div>
+  <div id="award-shelf" class="flex gap-3 overflow-x-auto pb-1" style="scrollbar-width:none"></div>
+</div>
+
+<!-- JOURNEY PROGRESS -->
+<div id="study-j" class="mb-4"></div>
+
+<!-- STUDY MODES -->
+<div class="mb-4">
+  <div class="text-[10px] font-bold uppercase tracking-widest mb-2" style="color:var(--dm)">Study Modes</div>
+  <div class="grid grid-cols-2 gap-2" id="stupr"></div>
+</div>
+
+<!-- EXPLORE BOOKS -->
+<div class="text-[10px] font-bold uppercase tracking-widest mb-2" style="color:var(--dm)">Explore Books</div>
+<div id="bks"></div>
+
+<!-- SCHOLAR PROFILE PANEL -->
+<div id="scholar-panel" style="display:none;position:fixed;inset:0;z-index:220;background:var(--bg);flex-direction:column;overflow:hidden">
+  <div style="height:54px;display:flex;align-items:center;gap:12px;padding:0 20px;border-bottom:1px solid var(--bd);flex-shrink:0;background:var(--s1)">
+    <button onclick="closeScholarProfile()" style="width:36px;height:36px;border-radius:50%;background:var(--s2);border:none;cursor:pointer;color:var(--mt);display:flex;align-items:center;justify-content:center"><i class="fa-solid fa-arrow-left text-sm"></i></button>
+    <span class="font-semibold text-base" style="color:var(--cream)">Scholar Profile</span>
+  </div>
+  <div style="flex:1;overflow-y:auto;padding:24px 20px 40px" id="scholar-panel-body"></div>
+</div>
+<!-- ALL QUESTS PANEL -->
+<div id="quests-panel" style="display:none;position:fixed;inset:0;z-index:221;background:var(--bg);flex-direction:column;overflow:hidden">
+  <div style="height:54px;display:flex;align-items:center;gap:12px;padding:0 20px;border-bottom:1px solid var(--bd);flex-shrink:0;background:var(--s1)">
+    <button onclick="closeAllQuests()" style="width:36px;height:36px;border-radius:50%;background:var(--s2);border:none;cursor:pointer;color:var(--mt);display:flex;align-items:center;justify-content:center"><i class="fa-solid fa-arrow-left text-sm"></i></button>
+    <span class="font-semibold text-base" style="color:var(--cream)">All Quests</span>
+  </div>
+  <div style="flex:1;overflow-y:auto;padding:24px 20px 40px" id="quests-panel-body"></div>
+</div>
+
+</div>
+<!-- SAVED -->
+<div class="page" id="pg-saved">
+<div class="flex items-center gap-3 mb-6"><div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background:color-mix(in srgb,var(--gold) 10%,transparent)"><i class="fa-solid fa-bookmark text-lg" style="color:var(--gold)"></i></div><div><h2 class="font-display text-2xl sm:text-3xl font-bold" style="color:var(--cream)">Saved Moments</h2><p class="text-sm" id="scnt" style="color:var(--mt)"></p></div></div>
+<div id="slst"></div>
+</div>
+
+<!-- RADIO -->
+<div class="page" id="pg-radio">
+<div class="flex items-center gap-3 mb-6">
+  <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background:color-mix(in srgb,var(--sky) 12%,transparent)">
+    <i class="fa-solid fa-radio" style="color:var(--sky)"></i>
+  </div>
+  <div>
+    <h2 class="font-display text-2xl sm:text-3xl font-bold" style="color:var(--cream)">Unity Radio</h2>
+    <p class="text-sm" style="color:var(--mt)">Live gospel, faith &amp; inspiration</p>
+  </div>
+</div>
+
+<!-- PLAYER CARD -->
+<div class="rounded-2xl overflow-hidden mb-5 relative" style="background:linear-gradient(145deg,#0a1520,#0d2035,#0a1520);border:1px solid color-mix(in srgb,var(--sky) 15%,transparent)">
+  <div class="absolute inset-0" style="background:radial-gradient(circle at 70% 30%,rgba(125,170,196,.12),transparent 60%),radial-gradient(circle at 20% 80%,rgba(201,168,76,.08),transparent 50%)"></div>
+  <div class="relative z-10 px-6 py-8 text-center">
+    <!-- Station logo -->
+    <div class="w-20 h-20 rounded-2xl mx-auto mb-5 flex items-center justify-center" style="background:color-mix(in srgb,var(--sky) 15%,rgba(0,0,0,.3));border:1.5px solid color-mix(in srgb,var(--sky) 25%,transparent)">
+      <i class="fa-solid fa-radio text-3xl" style="color:var(--sky)"></i>
+    </div>
+    <div class="text-xs font-bold uppercase tracking-[.15em] mb-1" style="color:var(--sky)">Omega Sports Radio</div>
+    <div class="font-display text-2xl font-bold mb-1" style="color:var(--cream)">Live Stream</div>
+    <!-- Status row -->
+    <div class="flex items-center justify-center gap-2 mb-6">
+      <div id="radio-dot" style="width:8px;height:8px;border-radius:50%;background:var(--dm);transition:background .3s"></div>
+      <span id="radio-lbl" class="text-sm font-medium" style="color:var(--mt)">Tap play to tune in</span>
+    </div>
+    <!-- EQ bars animation -->
+    <div id="radio-eq" class="flex items-end justify-center gap-1 mb-5" style="display:none!important;height:24px">
+      <div style="width:3px;border-radius:2px;background:var(--sky);animation:eq1 .8s ease-in-out infinite"></div>
+      <div style="width:3px;border-radius:2px;background:var(--sky);animation:eq2 .8s ease-in-out infinite .1s"></div>
+      <div style="width:3px;border-radius:2px;background:var(--sky);animation:eq1 .8s ease-in-out infinite .2s"></div>
+      <div style="width:3px;border-radius:2px;background:var(--sky);animation:eq2 .8s ease-in-out infinite .3s"></div>
+      <div style="width:3px;border-radius:2px;background:var(--sky);animation:eq1 .8s ease-in-out infinite .15s"></div>
+    </div>
+    <!-- Play button -->
+    <button id="radio-play-btn" onclick="toggleRadio()" class="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-5 transition" style="background:var(--sky);color:#0a1520;font-size:20px;box-shadow:0 8px 28px -4px rgba(125,170,196,.4)">
+      <i class="fa-solid fa-play"></i>
+    </button>
+    <!-- Open in browser -->
+    <a href="https://omegasports.co/listen-live" target="_blank" class="text-xs font-semibold" style="color:var(--dm)">Open in browser →</a>
+  </div>
+</div>
+
+<!-- Fallback iframe (hidden, activates on stream error) -->
+<div id="radio-iframe" style="display:none;border-radius:16px;overflow:hidden;margin-bottom:16px">
+  <iframe src="https://omegasports.co/listen-live" style="width:100%;height:160px;border:none;border-radius:16px" allowfullscreen allow="autoplay"></iframe>
+</div>
+
+<!-- INFO CARDS -->
+<div class="grid grid-cols-2 gap-3 mb-5">
+  <div class="pcard text-center" style="padding:14px">
+    <div class="text-xl mb-1">📡</div>
+    <div class="text-xs font-bold uppercase tracking-wider mb-0.5" style="color:var(--mt)">Format</div>
+    <div class="text-sm font-semibold" style="color:var(--cream)">Gospel · Faith · Sport</div>
+  </div>
+  <div class="pcard text-center" style="padding:14px">
+    <div class="text-xl mb-1">🇯🇲</div>
+    <div class="text-xs font-bold uppercase tracking-wider mb-0.5" style="color:var(--mt)">Location</div>
+    <div class="text-sm font-semibold" style="color:var(--cream)">Kingston, Jamaica</div>
+  </div>
+</div>
+
+<!-- Now Playing / Request -->
+<div class="pcard mb-4" style="border-color:color-mix(in srgb,var(--sky) 15%,transparent)">
+  <div class="text-xs font-bold uppercase tracking-widest mb-3" style="color:var(--mt)">Make a Prayer Request</div>
+  <p class="text-sm leading-relaxed mb-4" style="color:var(--txt)">While you listen, share what's on your heart and Unity Faith will pray with you.</p>
+  <button class="chip-primary w-full text-center justify-center" onclick="promptAI('I need prayer while I listen to worship music');goTab('home')">🙏 Submit Prayer Request</button>
+</div>
+</div>
+
+<!-- PRAY -->
+<div class="page" id="pg-pray">
+<div class="flex items-center gap-3 mb-6">
+  <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background:color-mix(in srgb,var(--rose) 10%,transparent)">
+    <i class="fa-solid fa-hands-praying" style="color:var(--rose)"></i>
+  </div>
+  <div>
+    <h2 class="font-display text-2xl sm:text-3xl font-bold" style="color:var(--cream)">Prayer Space</h2>
+    <p class="text-sm" style="color:var(--mt)">Scripture-grounded, Spirit-led prayer</p>
+  </div>
+</div>
+<div class="pcard mb-4" style="border-color:color-mix(in srgb,var(--rose) 20%,transparent)">
+  <p class="text-sm leading-relaxed mb-4" style="color:var(--txt)">Share what's on your heart. Unity Faith will pray with you, grounded in scripture.</p>
+  <div class="flex flex-wrap gap-2" id="pray-chips"></div>
+</div>
+<div id="pray-log"></div>
+</div>
+
+<!-- SERMONS -->
+<div class="page" id="pg-sermons">
+
+<!-- Featured Hero -->
+<div id="sermon-hero" class="rounded-2xl overflow-hidden mb-5 relative cursor-pointer" style="aspect-ratio:16/9;background:#1a0a2e" onclick="playSermon('s1')">
+  <img id="sermon-hero-img" src="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.6" onerror="this.style.display='none'">
+  <div class="absolute inset-0" style="background:linear-gradient(to top,rgba(0,0,0,.85) 0%,rgba(0,0,0,.2) 50%,transparent 100%)"></div>
+  <div id="sermon-hero-badge" class="absolute top-3 left-3"></div>
+  <div class="absolute bottom-0 left-0 right-0 p-4">
+    <div id="sermon-hero-meta" class="text-xs font-semibold mb-1" style="color:rgba(255,255,255,.6)"></div>
+    <div id="sermon-hero-title" class="font-display text-xl sm:text-2xl font-bold text-white mb-2 leading-tight"></div>
+    <div style="display:flex;gap:8px;align-items:center">
+      <button id="sermon-hero-play" class="flex items-center gap-2 px-4 py-2 rounded-xl font-bold text-sm" style="background:white;color:#0F0D0A">
+        <i class="fa-solid fa-play" style="font-size:10px"></i> Play
+      </button>
+      <button class="flex items-center gap-2 px-4 py-2 rounded-xl font-bold text-sm" style="background:rgba(255,255,255,.15);color:white;backdrop-filter:blur(8px)" onclick="event.stopPropagation();promptAI('Study summary of this sermon')">
+        <i class="fa-solid fa-book-open" style="font-size:10px"></i> Study
+      </button>
+    </div>
+  </div>
+  <div id="sermon-hero-progress" class="absolute bottom-0 left-0 right-0" style="height:3px;background:rgba(255,255,255,.15)">
+    <div id="sermon-hero-progress-bar" style="height:100%;background:var(--gold);width:0%;transition:width .5s"></div>
+  </div>
+</div>
+
+<!-- Inline Player Area -->
+<div id="inline-player-area"></div>
+
+<!-- Category Pills -->
+<div class="filter-bar mb-4" id="sermon-filter-bar">
   <button class="filter-pill on" onclick="filterSermons('all',this)">All</button>
   <button class="filter-pill" onclick="filterSermons('live',this)">🔴 Live</button>
   <button class="filter-pill" onclick="filterSermons('series',this)">Series</button>
@@ -363,59 +766,53 @@ color:var(--mt);cursor:pointer;transition:all .12s;width:100%;margin-bottom:2px;
   <button class="filter-pill" onclick="filterSermons('family',this)">Family</button>
   <button class="filter-pill" onclick="filterSermons('wisdom',this)">Wisdom</button>
 </div>
- 
-<!-- Live Now row (premium) -->
-<div id="live-row" class="mb-6">
+
+<!-- Continue Watching -->
+<div class="mb-5" id="continue-section">
+  <div class="flex items-center justify-between mb-3">
+    <span class="text-xs font-bold uppercase tracking-widest" style="color:var(--dm)">Continue Watching</span>
+  </div>
+  <div class="h-scroll" id="continue-row"></div>
+</div>
+
+<!-- Live Now -->
+<div id="live-row" class="mb-5">
   <div class="flex items-center gap-2 mb-3">
     <span class="live-badge">Live</span>
     <span class="text-xs font-bold uppercase tracking-widest" style="color:var(--mt)">Happening Now</span>
   </div>
-  <div class="pcard cursor-pointer relative overflow-hidden" onclick="showUpgrade('Watch live sermons in real-time with the Unity Beam. Upgrade to stream all live services, plus get access to the complete archive and our deepest theological study engine.')" style="border-color:color-mix(in srgb,var(--rose) 20%,transparent)">
+  <div class="pcard cursor-pointer relative overflow-hidden" onclick="showUpgrade('Watch live sermons in real-time. Upgrade to stream all live services plus the complete archive.')" style="border-color:color-mix(in srgb,var(--rose) 20%,transparent)">
     <div class="absolute top-3 right-3"><span class="live-badge">Live</span></div>
-    <div class="sermon-thumb-lg mb-4" style="background:linear-gradient(135deg,#1a0830,#3d1060,#6b2090)">
+    <div class="sermon-thumb-lg mb-3" style="background:linear-gradient(135deg,#1a0830,#3d1060,#6b2090)">
       <div class="absolute inset-0 flex items-center justify-center">
         <div class="play-btn"><i class="fa-solid fa-play text-gray-800" style="font-size:18px;margin-left:2px"></i></div>
       </div>
       <div class="absolute bottom-3 left-3"><span class="premium-lock">✦ Premium</span></div>
     </div>
-    <div class="font-semibold text-base" style="color:var(--cream)">Sunday Morning Service</div>
-    <div class="text-sm mt-0.5" style="color:var(--mt)">Pastor D. Williams · Live from Unity Church Kingston</div>
-    <div class="flex items-center gap-2 mt-3">
-      <span class="text-xs font-bold" style="color:var(--rose)">● 1,240 watching</span>
-      <span class="text-xs" style="color:var(--dm)">Started 22 min ago</span>
-    </div>
+    <div class="font-semibold text-sm" style="color:var(--cream)">Sunday Morning Service</div>
+    <div class="text-xs mt-0.5" style="color:var(--mt)">Pastor D. Williams · Live from Unity Church Kingston</div>
+    <div class="flex items-center gap-2 mt-2"><span class="text-xs font-bold" style="color:var(--rose)">● 1,240 watching</span><span class="text-xs" style="color:var(--dm)">Started 22 min ago</span></div>
   </div>
 </div>
- 
-<!-- Continue Watching -->
-<div class="mb-6">
-  <h4 class="text-xs font-bold uppercase tracking-widest mb-3" style="color:var(--mt)">Continue Watching</h4>
-  <div class="h-scroll" id="continue-row"></div>
+
+<!-- Main grid injected here -->
+<div id="sfull"></div>
+
 </div>
- 
-<!-- Recent Messages -->
-<div id="sfull" class="mt-2"></div>
-</div>
- 
-<!-- SAVED -->
-<div class="page" id="pg-saved">
-<div class="flex items-center gap-3 mb-6"><div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background:color-mix(in srgb,var(--gold) 10%,transparent)"><i class="fa-solid fa-bookmark text-lg" style="color:var(--gold)"></i></div><div><h2 class="font-display text-2xl sm:text-3xl font-bold" style="color:var(--cream)">Saved Moments</h2><p class="text-sm" id="scnt" style="color:var(--mt)"></p></div></div>
-<div id="slst"></div>
-</div>
- 
+
 <!-- CHAT -->
 <div id="cv" class="hidden flex-col gap-2 w-full"></div>
- 
+
 </div>
 </div>
 </div>
- 
+
 <!-- ═══ OVERLAY PANEL (event) ═══ -->
 <div id="cp"><div class="cp-top">
 <button onclick="cpClose()" class="w-9 h-9 rounded-full flex items-center justify-center transition shrink-0" style="color:var(--mt);background:var(--s2)"><i class="fa-solid fa-arrow-left text-sm"></i></button>
 <div class="flex-1 min-w-0"><div class="font-semibold text-base truncate" id="cp-t" style="color:var(--cream)"></div><div class="text-xs" style="color:var(--dm)" id="cp-s">Unity Faith</div></div>
 </div><div class="cp-bd" id="cp-b"></div></div>
- 
+
 <!-- ═══ PASTOR PANEL ═══ -->
 <div id="pastor-panel">
   <div class="cp-top">
@@ -424,11 +821,11 @@ color:var(--mt);cursor:pointer;transition:all .12s;width:100%;margin-bottom:2px;
   </div>
   <div class="flex-1 overflow-y-auto p-5" id="pastor-body"></div>
 </div>
- 
- 
+
+
 <!-- ═══ BOTTOM FADE ═══ -->
 <div class="bottom-fade" id="bottom-fade"></div>
- 
+
 <!-- ═══ OMNI BAR ═══ -->
 <div class="omni-dock">
 <div class="omni-inner">
@@ -440,16 +837,17 @@ color:var(--mt);cursor:pointer;transition:all .12s;width:100%;margin-bottom:2px;
   </div>
   <div class="flex gap-2 flex-wrap justify-center mt-2" id="ochips"></div>
 </div></div>
- 
+
 <!-- ═══ BOTTOM NAV (mobile) ═══ -->
 <nav class="bnav" id="bnav">
 <div class="bnav-i on" data-t="home" onclick="goTab('home')"><i class="fa-solid fa-house"></i><span>Home</span></div>
 <div class="bnav-i" data-t="study" onclick="goTab('study')"><i class="fa-solid fa-book-open"></i><span>Study</span></div>
 <div class="bnav-i" data-t="pray" onclick="goTab('pray')"><i class="fa-solid fa-hands-praying"></i><span>Pray</span></div>
 <div class="bnav-i" data-t="sermons" onclick="goTab('sermons')"><i class="fa-solid fa-play-circle"></i><span>Sermons</span></div>
+<div class="bnav-i" data-t="radio" onclick="goTab('radio')"><i class="fa-solid fa-radio"></i><span>Radio</span></div>
 <div class="bnav-i" data-t="saved" onclick="goTab('saved')"><i class="fa-solid fa-bookmark"></i><span>Saved</span></div>
 </nav>
- 
+
 <!-- ═══ UPGRADE SHEET ═══ -->
 <div class="upgrade-overlay" id="upgrade-overlay" onclick="closeUpgrade()"></div>
 <div class="upgrade-sheet" id="upgrade-sheet">
@@ -468,29 +866,29 @@ color:var(--mt);cursor:pointer;transition:all .12s;width:100%;margin-bottom:2px;
   <button onclick="closeUpgrade()" class="w-full py-4 rounded-2xl font-bold text-base" style="background:var(--gold);color:var(--bg)">Upgrade — J$999/month</button>
   <button onclick="closeUpgrade()" class="w-full mt-3 text-sm font-medium" style="color:var(--dm)">Maybe later</button>
 </div>
- 
+
 <script>
 const CFG={KEY:'sk-cc6ecc51f2ba4366bb6b95905d8e9f2a',URL:'https://api.deepseek.com/v1/chat/completions',MODEL:'deepseek-chat'};
 const SYS=`You are Unity Faith — a warm, reverent, scripture-grounded spiritual companion powered by the Unity Engine. Tone: like a wise pastor-friend who deeply knows scripture. Never preachy or robotic.
 ALWAYS cite specific verses (book ch:verse). Include verse text in quotes. Concise. **bold** for emphasis. Prayers: first person. Study: context→meaning→cross-refs→application. Empathy before scripture. Never judgmental. Not a replacement for church/pastoral counseling.`;
 const LOGOS_SYS=`You are Unity Faith Logos — a deeply analytical, scripture-saturated theological study engine. You reason step by step through Greek/Hebrew roots, historical context, cross-references, systematic theology, and pastoral application. Responses are detailed, richly structured, and transformative. ALWAYS cite specific verses with text. Use **bold** for key terms. Begin complex answers by acknowledging the depth of the question.`;
- 
+
 let ST={theme:localStorage.uf_th||(matchMedia('(prefers-color-scheme:light)').matches?'light':'dark'),tab:'home',chat:false,streaming:false,abort:null,convo:[],engine:'spark'};
 let saved=JSON.parse(localStorage.uf_sv||'[]'),prayers=JSON.parse(localStorage.uf_pr||'[]'),
 journey=JSON.parse(localStorage.uf_jn||'null'),streak=+(localStorage.uf_st||0),lastDay=localStorage.uf_ld||'';
- 
+
 const ALLV=[{t:'"For I know the plans I have for you," declares the Lord, "plans to prosper you and not to harm you, plans to give you hope and a future."',r:'Jeremiah 29:11'},{t:'"Trust in the Lord with all your heart and lean not on your own understanding; in all your ways submit to him, and he will make your paths straight."',r:'Proverbs 3:5-6'},{t:'"The Lord is my shepherd, I lack nothing. He makes me lie down in green pastures, he leads me beside quiet waters, he refreshes my soul."',r:'Psalm 23:1-3'},{t:'"Be strong and courageous. Do not be afraid; do not be discouraged, for the Lord your God will be with you wherever you go."',r:'Joshua 1:9'},{t:'"Come to me, all you who are weary and burdened, and I will give you rest."',r:'Matthew 11:28'},{t:'"I can do all this through him who gives me strength."',r:'Philippians 4:13'},{t:'"The Lord is close to the brokenhearted and saves those who are crushed in spirit."',r:'Psalm 34:18'},{t:'"And we know that in all things God works for the good of those who love him, who have been called according to his purpose."',r:'Romans 8:28'},{t:'"He has made everything beautiful in its time. He has also set eternity in the human heart."',r:'Ecclesiastes 3:11'},{t:'"Be still, and know that I am God."',r:'Psalm 46:10'}];
 const VOTD=ALLV[new Date().getDate()%ALLV.length];
- 
+
 const PASTORS={
   'Pastor D. Williams':{initials:'DW',color:'gold',church:'Unity Church Kingston',ministry:'10 years in ministry',bio:'Pastor Williams leads Unity Church Kingston with a passion for expository preaching and community transformation. Known for his ability to bridge ancient scripture with modern life.',series:'Armor of God, Walking by Faith',verses:['Ephesians 6:11','Hebrews 11:1','Romans 8:28']},
   'Pastor M. Johnson':{initials:'MJ',color:'rose',church:'Grace Fellowship',ministry:'15 years in ministry',bio:'Pastor Johnson is a gifted communicator whose sermons on encountering God in silence and solitude have resonated across Jamaica and the diaspora.',series:'The Still Small Voice, Seasons of Rest',verses:['1 Kings 19:12','Psalm 46:10','John 10:27']},
   'Pastor R. Clarke':{initials:'RC',color:'sky',church:'New Life Assembly',ministry:'8 years in ministry',bio:'Pastor Clarke specializes in Wisdom Literature and has developed a unique framework for applying Ecclesiastes and Proverbs to 21st century challenges.',series:'Seasons of Waiting, A Time for Everything',verses:['Ecclesiastes 3:1','Isaiah 40:31','Proverbs 3:5']},
   'Pastor A. Lewis':{initials:'AL',color:'sage',church:'Harvest Chapel',ministry:'12 years in ministry',bio:'Pastor Lewis is known for her prophetic vision and her ability to bring Isaiah\'s poetry alive. She leads a thriving women\'s ministry and mentorship program.',series:'Rivers in the Desert, New Things',verses:['Isaiah 43:19','Isaiah 35:6','John 7:38']}
 };
- 
+
 const GRADIENTS={gold:'linear-gradient(135deg,#C9A84C,#7A6030)',sage:'linear-gradient(135deg,#7A9E7E,#3E5E42)',rose:'linear-gradient(135deg,#C47D7D,#7A3E3E)',sky:'linear-gradient(135deg,#7DAAC4,#3A6080)'};
- 
+
 const SERMONS=[
   {id:'s1',title:'Walking by Faith',pastor:'Pastor D. Williams',book:'Hebrews 11',date:'Mar 30',dur:'42 min',verses:['Heb 11:1','Heb 11:6','2 Cor 5:7'],c:'gold',topic:'faith',series:'Walking by Faith',thumb:'https://images.unsplash.com/photo-1515162816999-a0c47dc192f7?w=400&q=60',progress:65},
   {id:'s2',title:'The Still Small Voice',pastor:'Pastor M. Johnson',book:'1 Kings 19',date:'Mar 23',dur:'38 min',verses:['1 Kings 19:12','Psalm 46:10','John 10:27'],c:'rose',topic:'prayer',series:'Encountering God',thumb:'https://images.unsplash.com/photo-1504052434569-70ad5836ab65?w=400&q=60',progress:0},
@@ -500,7 +898,7 @@ const SERMONS=[
 ];
 const TOPICS=[['Peace & Anxiety','What does the Bible say about anxiety and finding peace?'],['Forgiveness','What does the Bible say about forgiveness?'],["God's Love",'Verses about God\'s love and faithfulness'],['Purpose','What does scripture say about purpose and calling?'],['Hope','Bible verses about hope in hard times'],['Wisdom','What does the Bible teach about wisdom?'],['Family','Scriptures about marriage and family'],['Strength','Verses about strength and courage']];
 const $=id=>document.getElementById(id);
- 
+
 /* ═══ ENGINE ═══ */
 function toggleEngine(){
   if(ST.engine==='spark'){
@@ -518,7 +916,7 @@ function updateEngineUI(){
   ['omni-engine-label'].forEach(id=>{const el=$(id);if(el)el.textContent=label;});
   const sb=$('sb-engine-label');if(sb)sb.textContent=isSpark?'Powered by Unity':'Powered by Unity — Logos';
 }
- 
+
 /* ═══ UPGRADE SHEET ═══ */
 function showUpgrade(msg){
   $('upgrade-msg').textContent=msg||'Unlock the full Unity Faith experience with Unity Disciple.';
@@ -529,7 +927,7 @@ function closeUpgrade(){
   $('upgrade-sheet').classList.remove('open');
   $('upgrade-overlay').classList.remove('open');
 }
- 
+
 /* ═══ PASTOR PROFILE ═══ */
 function openPastor(name){
   const p=PASTORS[name];if(!p)return;
@@ -572,7 +970,7 @@ function openPastor(name){
   $('pastor-panel').classList.add('open');
 }
 function closePastor(){$('pastor-panel').classList.remove('open');}
- 
+
 /* ═══ SERMON PLAYER ═══ */
 function playSermon(id){
   const s=SERMONS.find(x=>x.id===id);
@@ -585,7 +983,7 @@ function playSermon(id){
     if(pa){pa.innerHTML=`<div class="inline-player"><div class="flex items-center gap-2 mb-3"><div class="w-2 h-2 rounded-full animate-breathe" style="background:var(--sage)"></div><span class="text-xs font-semibold" style="color:var(--sage)">Now Playing</span><span class="text-xs ml-auto" style="color:var(--dm)">${s.dur}</span></div><div style="width:100%;aspect-ratio:16/9;border-radius:12px;overflow:hidden;background:linear-gradient(135deg,${GRADIENTS[s.c]});position:relative;display:flex;align-items:center;justify-content:center"><div style="text-align:center;color:white"><i class="fa-solid fa-play-circle" style="font-size:48px;opacity:.8"></i><p class="mt-3 text-sm font-semibold opacity-70">${s.title}</p><p style="font-size:11px;opacity:.5;margin-top:4px">Video integration coming via Unity Beam</p></div></div></div>`;pa.scrollIntoView({behavior:'smooth'});}
   },100);
 }
- 
+
 /* ═══ SERMONS RENDER ═══ */
 let activeFilter='all';
 function filterSermons(f,btn){
@@ -594,59 +992,97 @@ function filterSermons(f,btn){
   btn.classList.add('on');
   rSermons();
 }
+
 function rSermons(){
+  // Hero card — always show first or in-progress
+  const hero=SERMONS.find(s=>s.progress>0)||SERMONS[0];
+  if(hero){
+    const heroImg=$('sermon-hero-img'); if(heroImg){heroImg.src=hero.thumb;}
+    const cv=`var(--${hero.c})`;
+    if($('sermon-hero'))$('sermon-hero').style.background=GRADIENTS[hero.c]||GRADIENTS.gold;
+    if($('sermon-hero-title'))$('sermon-hero-title').textContent=hero.title;
+    if($('sermon-hero-meta'))$('sermon-hero-meta').textContent=hero.pastor+' · '+hero.book+' · '+hero.dur;
+    if($('sermon-hero-play'))$('sermon-hero-play').onclick=()=>playSermon(hero.id);
+    if($('sermon-hero-progress-bar'))$('sermon-hero-progress-bar').style.width=(hero.progress||0)+'%';
+    if($('sermon-hero-badge')&&hero.premium)$('sermon-hero-badge').innerHTML='<span class="premium-lock">✦ Premium</span>';
+    if($('sermon-hero-badge')&&!hero.premium)$('sermon-hero-badge').innerHTML='';
+  }
+
   // Continue watching row
   const inProgress=SERMONS.filter(s=>s.progress>0);
-  $('continue-row').innerHTML=inProgress.length?inProgress.map(s=>`
-    <div class="h-scroll-card pcard pcard-lift p-3 cursor-pointer" onclick="playSermon('${s.id}')">
-      <div style="width:100%;aspect-ratio:16/9;border-radius:10px;overflow:hidden;position:relative;margin-bottom:10px;background:linear-gradient(135deg,${GRADIENTS[s.c]||GRADIENTS.gold})">
+  const cSection=$('continue-section');
+  if(cSection) cSection.style.display=inProgress.length?'block':'none';
+  if($('continue-row')) $('continue-row').innerHTML=inProgress.map(s=>`
+    <div class="h-scroll-card cursor-pointer" onclick="playSermon('${s.id}')">
+      <div style="width:100%;aspect-ratio:16/9;border-radius:12px;overflow:hidden;position:relative;margin-bottom:8px;background:${GRADIENTS[s.c]||GRADIENTS.gold}">
         <img src="${s.thumb}" style="width:100%;height:100%;object-fit:cover;opacity:.7" onerror="this.style.display='none'">
-        <div style="position:absolute;bottom:6px;left:6px;right:6px;height:3px;background:rgba(255,255,255,.2);border-radius:2px">
-          <div style="height:100%;width:${s.progress}%;background:var(--gold);border-radius:2px"></div>
+        <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center">
+          <div style="width:30px;height:30px;border-radius:50%;background:rgba(255,255,255,.9);display:flex;align-items:center;justify-content:center">
+            <i class="fa-solid fa-play" style="font-size:10px;margin-left:1px;color:#111"></i>
+          </div>
+        </div>
+        <div style="position:absolute;bottom:0;left:0;right:0;height:3px;background:rgba(0,0,0,.3)">
+          <div style="height:100%;width:${s.progress}%;background:var(--gold)"></div>
         </div>
       </div>
-      <div class="font-semibold text-xs" style="color:var(--cream)">${s.title}</div>
-      <div class="text-xs mt-0.5" style="color:var(--dm)">${s.progress}% complete</div>
-    </div>`).join('')
-  :`<div class="pcard" style="min-width:200px"><p class="text-xs text-center" style="color:var(--mt)">Start watching to track your progress</p></div>`;
- 
-  // Main sermon list
-  const filtered=activeFilter==='all'?SERMONS:SERMONS.filter(s=>{
-    if(activeFilter==='live')return false;// live handled separately
-    if(activeFilter==='series')return !!s.series;
+      <div style="font-size:12px;font-weight:600;color:var(--cream);line-height:1.3">${s.title}</div>
+      <div style="font-size:11px;color:var(--dm);margin-top:2px">${s.progress}% · ${s.dur}</div>
+    </div>`).join('');
+
+  // Filter + grid
+  const filtered=activeFilter==='all'?SERMONS:activeFilter==='live'?[]:SERMONS.filter(s=>{
+    if(activeFilter==='series')return!!s.series;
     return s.topic===activeFilter;
   });
-  $('sfull').innerHTML=`<div id="inline-player-area"></div>`+
-  `<h4 class="text-xs font-bold uppercase tracking-widest mb-4" style="color:var(--mt)">Recent Messages</h4>`+
-  filtered.map(s=>{const cv=`var(--${s.c})`;return`
-  <div class="pcard pcard-lift mb-4 cursor-pointer" onclick="playSermon('${s.id}')">
-    <div class="sermon-thumb-lg mb-4 relative" style="background:${GRADIENTS[s.c]||GRADIENTS.gold}">
-      <img src="${s.thumb}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.55;border-radius:14px" onerror="this.style.display='none'">
-      <div class="absolute inset-0 flex items-center justify-center z-10">
-        <div class="play-btn"><i class="fa-solid fa-play text-gray-800" style="font-size:18px;margin-left:2px"></i></div>
-      </div>
-      ${s.premium?`<div style="position:absolute;top:10px;right:10px;z-index:10"><span class="premium-lock">✦ Premium</span></div>`:''}
-      ${s.progress>0?`<div style="position:absolute;bottom:0;left:0;right:0;height:3px;background:rgba(0,0,0,.3)"><div style="height:100%;width:${s.progress}%;background:var(--gold)"></div></div>`:''}
-    </div>
-    <div class="flex items-start gap-3">
-      <div class="flex-1 min-w-0">
-        <div class="font-semibold text-base leading-tight" style="color:var(--cream)">${s.title}</div>
-        <div class="text-sm mt-1" style="color:var(--mt)">
-          <button class="font-semibold hover:underline" style="color:${cv}" onclick="event.stopPropagation();openPastor('${s.pastor}')">${s.pastor}</button>
-          · ${s.book}
+
+  if(!$('sfull'))return;
+  if(!filtered.length){
+    $('sfull').innerHTML=`<div class="pcard text-center py-8"><i class="fa-solid fa-tv text-2xl mb-3" style="color:var(--dm)"></i><p style="color:var(--mt)">No messages in this category yet.</p></div>`;
+    return;
+  }
+
+  // Section header + 2-col grid for first 4, then list
+  const gridItems=filtered.slice(0,4);
+  const listItems=filtered.slice(4);
+
+  $('sfull').innerHTML=
+    `<div style="font-size:10px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--dm);margin-bottom:12px">Recent Messages</div>`+
+    `<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px">`+
+    gridItems.map(s=>{const cv=`var(--${s.c})`;return`
+      <div class="cursor-pointer" onclick="playSermon('${s.id}')">
+        <div style="width:100%;aspect-ratio:16/9;border-radius:12px;overflow:hidden;position:relative;margin-bottom:7px;background:${GRADIENTS[s.c]||GRADIENTS.gold}">
+          <img src="${s.thumb}" style="width:100%;height:100%;object-fit:cover;opacity:.65" onerror="this.style.display='none'">
+          <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center">
+            <div style="width:28px;height:28px;border-radius:50%;background:rgba(255,255,255,.88);display:flex;align-items:center;justify-content:center">
+              <i class="fa-solid fa-play" style="font-size:9px;margin-left:1px;color:#111"></i>
+            </div>
+          </div>
+          ${s.premium?`<div style="position:absolute;top:6px;right:6px"><span class="premium-lock">✦</span></div>`:''}
+          ${s.progress>0?`<div style="position:absolute;bottom:0;left:0;right:0;height:2px;background:rgba(0,0,0,.3)"><div style="height:100%;width:${s.progress}%;background:var(--gold)"></div></div>`:''}
         </div>
-        <div class="text-xs mt-0.5" style="color:var(--dm)">${s.date} · ${s.dur}${s.series?` · <em>${s.series}</em>`:''}</div>
-      </div>
-    </div>
-    <div class="flex flex-wrap gap-1.5 mt-3 mb-3">${s.verses.map(v=>`<span class="text-xs font-bold px-2.5 py-1 rounded-full" style="background:color-mix(in srgb,${cv} 8%,transparent);color:${cv};border:1px solid color-mix(in srgb,${cv} 12%,transparent)">${v}</span>`).join('')}</div>
-    <div class="flex gap-2">
-      <button class="chip-primary" onclick="event.stopPropagation();promptAI('Summarize \\x27${s.title}\\x27 by ${s.pastor} from ${s.book}: theme, key points, key verses, reflection questions')">✦ Study Summary</button>
-      <button class="chip" onclick="event.stopPropagation();promptAI('Study path for \\x27${s.title}\\x27 — ${s.book}')">Study Path</button>
-    </div>
-  </div>`}).join('')+
-  `<div class="pcard mt-5 text-center"><i class="fa-solid fa-church text-2xl mb-3" style="color:var(--gold)"></i><h3 class="font-semibold text-lg" style="color:var(--cream)">Unity Beam for Churches</h3><p class="text-sm mt-1 leading-relaxed" style="color:var(--mt)">Pastors publish → auto verse detection → study summaries → live streaming.</p></div>`;
+        <div style="font-size:12px;font-weight:600;color:var(--cream);line-height:1.3;margin-bottom:2px">${s.title}</div>
+        <div style="font-size:11px;color:var(--mt)">${s.pastor.split(' ').pop()}</div>
+        <div style="font-size:10px;color:var(--dm)">${s.date} · ${s.dur}</div>
+      </div>`}).join('')+
+    `</div>`+
+    listItems.map(s=>{const cv=`var(--${s.c})`;return`
+      <div class="pcard mb-3 cursor-pointer" style="padding:12px" onclick="playSermon('${s.id}')">
+        <div style="display:flex;gap:12px;align-items:flex-start">
+          <div style="width:110px;aspect-ratio:16/9;flex-shrink:0;border-radius:10px;overflow:hidden;position:relative;background:${GRADIENTS[s.c]||GRADIENTS.gold}">
+            <img src="${s.thumb}" style="width:100%;height:100%;object-fit:cover;opacity:.7" onerror="this.style.display='none'">
+            ${s.premium?`<div style="position:absolute;top:4px;right:4px"><span class="premium-lock" style="font-size:8px;padding:2px 5px">✦</span></div>`:''}
+          </div>
+          <div style="flex:1;min-width:0">
+            <div style="font-size:13px;font-weight:600;color:var(--cream);line-height:1.3;margin-bottom:3px">${s.title}</div>
+            <div style="font-size:11px;color:var(--mt);margin-bottom:2px">${s.pastor} · ${s.book}</div>
+            <div style="font-size:10px;color:var(--dm)">${s.date} · ${s.dur}</div>
+            <div style="display:flex;gap:6px;margin-top:6px;flex-wrap:wrap">${s.verses.slice(0,2).map(v=>`<span style="font-size:10px;font-weight:600;padding:2px 7px;border-radius:100px;background:color-mix(in srgb,${cv} 8%,transparent);color:${cv};border:1px solid color-mix(in srgb,${cv} 15%,transparent)">${v}</span>`).join('')}</div>
+          </div>
+        </div>
+      </div>`}).join('')+
+    `<div class="pcard mt-4 text-center" style="padding:20px"><i class="fa-solid fa-church text-2xl mb-3" style="color:var(--gold)"></i><h3 style="font-weight:600;font-size:15px;color:var(--cream)">Unity Beam for Churches</h3><p style="font-size:12px;color:var(--mt);margin-top:4px">Pastors publish · auto verse detection · live streaming</p></div>`;
 }
- 
+
 function sCard(s){const gr=GRADIENTS[s.c]||GRADIENTS.gold;return`
 <div class="gl p-4 rounded-2xl cursor-pointer pcard-lift transition" style="transition:transform .18s,box-shadow .18s" onclick="playSermon('${s.id}')">
   <div style="width:100%;aspect-ratio:16/9;border-radius:10px;overflow:hidden;position:relative;margin-bottom:10px;background:${gr}">
@@ -662,12 +1098,13 @@ function sCard(s){const gr=GRADIENTS[s.c]||GRADIENTS.gold;return`
   <div class="text-xs mt-0.5" style="color:var(--mt)">${s.pastor}</div>
   <div class="text-xs mt-0.5" style="color:var(--dm)">${s.date}</div>
 </div>`;}
- 
- 
- 
- 
- 
- 
+
+
+
+
+
+
+
 /* ═══ SPLASH ═══ */
 function initSplash(){
   if(localStorage.uf_nm){$('splash').classList.add('hide');setTimeout(()=>{$('splash').style.display='none';},600);$('shell').style.opacity='1';initApp();}
@@ -681,7 +1118,7 @@ function finishSplash(){
   $('shell').style.opacity='1';
   initApp();
 }
- 
+
 /* ═══ INIT ═══ */
 function initApp(){
   if(ST.theme==='light')document.documentElement.classList.add('light');
@@ -716,14 +1153,14 @@ document.querySelectorAll('.sb-item[data-t]').forEach(b=>b.classList.toggle('on'
 rTab();updChips();$('content-area').scrollTo({top:0});}
 function goHome(){if(!ST.chat)return;ST.chat=false;if(ST.abort){ST.abort.abort();ST.abort=null;ST.streaming=false;}
 $('cv').classList.add('hidden');$('cv').classList.remove('flex');$('cv').innerHTML='';$('pg-'+ST.tab)?.classList.add('active');ST.convo=[];updChips();}
-function rTab(){if(ST.tab==='study')rStudy();else if(ST.tab==='pray')rPray();else if(ST.tab==='sermons')rSermons();else if(ST.tab==='saved')rSaved();}
+function rTab(){if(ST.tab==='study')rStudy();else if(ST.tab==='pray')rPray();else if(ST.tab==='sermons')rSermons();else if(ST.tab==='saved')rSaved();else if(ST.tab==='radio')rRadio();}
 function updChips(){if(ST.chat){$('ochips').innerHTML='';return;}
 const m={home:[['Pray','Help me pray'],['Verse','A verse for encouragement'],['Study','Study scripture'],['Peace','Anxious — what does scripture say?']],
 study:[['Psalms','Guide me through Psalm 1'],['Romans 8','Explain Romans 8:28'],['Parables','Teach me about Jesus\' parables']],
 pray:[['Strength','Prayer for strength'],['Gratitude','Prayer of gratitude'],['Family','Prayer for my family']],
 sermons:[['Summary','Summarize the latest sermon'],['Hebrews','Deep dive Hebrews 11']],saved:[['Reflect','Reflect on my saved verses']]};
 $('ochips').innerHTML=(m[ST.tab]||m.home).map(([l,q])=>`<div class="chip" onclick="promptAI(\`${q}\`)">${l}</div>`).join('');}
- 
+
 /* ═══ CHAT ═══ */
 function enterChat(){if(ST.chat)return;ST.chat=true;$('ochips').innerHTML='';
 document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));$('cv').classList.remove('hidden');$('cv').classList.add('flex');}
@@ -732,7 +1169,7 @@ async function promptAI(text){if(ST.streaming)return;enterChat();rUser(text);ST.
 const isLogos=ST.engine==='logos';
 if(isLogos){showThinkingHint();}else{showTy();}
 try{await streamAI(isLogos);}catch(e){hideTy();if(e.name!=='AbortError')botMsg(`<em class="verse-t">"Be still, and know that I am God."</em> <span class="verse-r">— Psalm 46:10</span><br><br>Please try again.`);}}
- 
+
 function showThinkingHint(){
   $('cv').insertAdjacentHTML('beforeend',`<div id="typ" class="flex gap-3 mt-3 animate-fade"><div class="w-7 h-7 rounded-full flex items-center justify-center shrink-0 mt-0.5" style="background:color-mix(in srgb,var(--gold) 12%,transparent)"><i class="fa-solid fa-cross" style="font-size:7px;color:var(--gold)"></i></div><div><div class="thinking-panel"><div class="thinking-header"><i class="fa-solid fa-brain text-xs" style="color:var(--gold)"></i><span class="text-xs font-semibold" style="color:var(--gold)">Logos is reflecting…</span></div><div class="thinking-body" id="thinking-steps"><div class="tdots" style="border:none;padding:4px 0;background:none"><div class="tdot animate-dot1"></div><div class="tdot animate-dot2"></div><div class="tdot animate-dot3"></div></div></div></div></div></div>`);
   const steps=['Parsing scriptural context…','Consulting Hebrew & Greek roots…','Cross-referencing related passages…','Formulating pastoral application…'];
@@ -743,7 +1180,7 @@ function showThinkingHint(){
 }
 function showTy(){$('cv').insertAdjacentHTML('beforeend',`<div id="typ" class="flex gap-3 mt-3 animate-fade"><div class="w-7 h-7 rounded-full flex items-center justify-center shrink-0 mt-0.5" style="background:color-mix(in srgb,var(--gold) 12%,transparent)"><i class="fa-solid fa-cross" style="font-size:7px;color:var(--gold)"></i></div><div class="tdots"><div class="tdot animate-dot1"></div><div class="tdot animate-dot2"></div><div class="tdot animate-dot3"></div></div></div>`);scD();}
 function hideTy(){$('typ')?.remove();}
- 
+
 async function streamAI(isLogos=false){ST.streaming=true;const ctrl=new AbortController();ST.abort=ctrl;
 const systemPrompt=isLogos?LOGOS_SYS:SYS;
 const res=await fetch(CFG.URL,{method:'POST',headers:{'Content-Type':'application/json','Authorization':`Bearer ${CFG.KEY}`},signal:ctrl.signal,
@@ -760,7 +1197,7 @@ finally{out.removeAttribute('id');out.innerHTML=fmd(full);ST.convo.push({role:'a
 const w=document.createElement('div');w.className='flex flex-wrap gap-2 mt-4';
 w.innerHTML=`<button class="cact" onclick="doSave('reflection',this)"><i class="fa-regular fa-bookmark"></i> Save</button><button class="cact" onclick="promptAI('Turn your last response into a personal prayer')"><i class="fa-solid fa-hands-praying" style="font-size:10px"></i> Pray This</button><button class="cact" onclick="promptAI('Go deeper — cross-references and application')"><i class="fa-solid fa-arrow-down" style="font-size:10px"></i> Deeper</button><button class="cact" onclick="promptAI('Create a 3-day study plan from this')"><i class="fa-solid fa-road" style="font-size:10px"></i> Study Plan</button>`;
 el.querySelector('.flex-1').appendChild(w);scD();}}
- 
+
 function doSave(type,btn){const last=ST.convo[ST.convo.length-1];if(last?.role==='assistant'){
 saved.push({type,text:last.content.substring(0,500),date:new Date().toISOString()});localStorage.uf_sv=JSON.stringify(saved);
 if(btn){btn.innerHTML='<i class="fa-solid fa-check"></i> Saved';btn.style.color='var(--gold)';btn.style.borderColor='var(--gold)';}}}
@@ -776,100 +1213,499 @@ function fmd(t){return t.replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>').replace
 .replace(/^> (.+)$/gm,'<blockquote style="border-left:2px solid color-mix(in srgb,var(--gold) 30%,transparent);padding-left:14px;margin:8px 0;font-style:italic;font-family:Cormorant Garamond,serif;font-size:17px;color:var(--cream)">$1</blockquote>')
 .replace(/^- (.+)$/gm,'<div style="display:flex;gap:6px;margin:2px 0"><span style="color:var(--gold)">·</span><span>$1</span></div>')
 .replace(/\n\n/g,'<br><br>').replace(/\n/g,'<br>');}
- 
+
 /* ═══ JOURNEY ═══ */
 function rJCard(){$('jcard').innerHTML=`<div class="flex items-center justify-between mb-3"><div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background:color-mix(in srgb,var(--gold) 10%,transparent)"><i class="fa-solid fa-road" style="color:var(--gold)"></i></div><span class="text-xs font-bold rounded-full px-2.5 py-1" style="background:color-mix(in srgb,var(--sage) 10%,transparent);color:var(--sage)">Day ${journey.day}/${journey.total}</span></div><p class="text-xs uppercase tracking-widest font-bold" style="color:var(--mt)">Reading Journey</p><h3 class="font-display font-bold text-xl mt-1" style="color:var(--cream)">Book of ${journey.book}</h3><p class="text-sm mt-1" style="color:var(--mt)">${journey.current}</p><div class="mt-3 h-2 rounded-full overflow-hidden" style="background:var(--s3)"><div class="h-full rounded-full" style="width:${Math.round(journey.day/journey.total*100)}%;background:linear-gradient(90deg,var(--sage),var(--gold))"></div></div>`;}
 function advJ(){if(journey.day<journey.total){journey.day++;journey.current=journey.book+' — Day '+journey.day;localStorage.uf_jn=JSON.stringify(journey);rJCard();}}
- 
+
 /* ═══ STUDY ═══ */
+/* ═══ GAMIFICATION ENGINE ═══ */
+const RANKS=[
+  {min:0,max:199,name:'Seeker',icon:'🌱',color:'var(--mt)'},
+  {min:200,max:499,name:'Disciple',icon:'📖',color:'var(--sage)'},
+  {min:500,max:999,name:'Scholar',icon:'✨',color:'var(--sky)'},
+  {min:1000,max:1999,name:'Scribe',icon:'🖋️',color:'var(--gold)'},
+  {min:2000,max:3999,name:'Prophet',icon:'🔥',color:'var(--rose)'},
+  {min:4000,max:9999,name:'Apostle',icon:'⚡',color:'#a78bfa'},
+  {min:10000,max:Infinity,name:'Anointed',icon:'👑',color:'var(--gold)'}
+];
+const AWARDS_DEF=[
+  {id:'first_study',icon:'🌅',name:'First Light',desc:'Completed your first study session',xp:50,earned:false},
+  {id:'streak_3',icon:'🔥',name:'On Fire',desc:'3-day study streak',xp:75,earned:false},
+  {id:'streak_7',icon:'⚡',name:'Charged',desc:'7-day study streak',xp:150,earned:false},
+  {id:'streak_30',icon:'💎',name:'Diamond Faith',desc:'30-day study streak',xp:500,earned:false},
+  {id:'books_5',icon:'📚',name:'Bookworm',desc:'Explored 5 different books',xp:100,earned:false},
+  {id:'word_study',icon:'🔬',name:'Word Weaver',desc:'Completed 3 word studies',xp:125,earned:false},
+  {id:'prayer_10',icon:'🙏',name:'Prayer Warrior',desc:'Wrote 10 prayers',xp:100,earned:false},
+  {id:'sermon_5',icon:'🎤',name:'Listener',desc:'Watched 5 sermons',xp:100,earned:false},
+  {id:'saved_20',icon:'⭐',name:'Collector',desc:'Saved 20 moments',xp:150,earned:false},
+  {id:'night_owl',icon:'🦉',name:'Night Owl',desc:'Studied after midnight',xp:60,earned:false},
+  {id:'early_bird_study',icon:'🌄',name:'Early Riser',desc:'Studied before 6am',xp:60,earned:false},
+];
+const QUESTS_DEF=[
+  {id:'q_daily',icon:'📅',name:'Daily Devotion',desc:'Complete a study session today',reward:30,type:'daily',done:false},
+  {id:'q_verse',icon:'✍️',name:'Verse Vault',desc:'Save 3 verses this week',reward:45,type:'weekly',progress:0,total:3,done:false},
+  {id:'q_journey',icon:'🗺️',name:'Journey On',desc:'Advance 5 days in your book journey',reward:80,type:'journey',progress:0,total:5,done:false},
+  {id:'q_word',icon:'🔬',name:'Word Deep Dive',desc:'Complete a word or character study',reward:60,type:'weekly',done:false},
+  {id:'q_sermon',icon:'🎤',name:'Sit Under Teaching',desc:'Watch or study a sermon this week',reward:40,type:'weekly',done:false},
+  {id:'q_pray',icon:'🙏',name:'Prayer Chain',desc:'Write a prayer using the AI',reward:35,type:'daily',done:false},
+];
+let scholarData=(()=>{try{return JSON.parse(localStorage.uf_scholar)||{};}catch(e){return {};}})();
+if(!scholarData.xp)scholarData={xp:0,booksExplored:[],awards:AWARDS_DEF.map(a=>({...a})),quests:QUESTS_DEF.map(q=>({...q})),studySessions:0,wordStudies:0};
+function saveScholar(){localStorage.uf_scholar=JSON.stringify(scholarData);}
+function getRank(xp){return RANKS.slice().reverse().find(r=>xp>=r.min)||RANKS[0];}
+function grantXP(amount,reason){
+  scholarData.xp=(scholarData.xp||0)+amount;saveScholar();
+  showXPToast('+'+amount+' XP'+(reason?' · '+reason:''));checkAwards();
+  if($('xp-bar'))renderScholarCard();
+}
+function showXPToast(msg){
+  const t=document.createElement('div');t.textContent=msg;
+  t.style.cssText='position:fixed;bottom:180px;left:50%;transform:translateX(-50%);background:var(--gold);color:var(--bg);padding:8px 20px;border-radius:100px;font-size:13px;font-weight:700;z-index:999;pointer-events:none;opacity:0;transition:opacity .3s';
+  document.body.appendChild(t);requestAnimationFrame(()=>{t.style.opacity='1';});
+  setTimeout(()=>{t.style.opacity='0';setTimeout(()=>t.remove(),400);},2200);
+}
+function showAwardToast(a){
+  const t=document.createElement('div');
+  t.innerHTML=`<div style="font-size:32px;margin-bottom:6px">${a.icon}</div><div style="font-weight:800;font-size:14px;color:var(--cream)">${a.name}</div><div style="font-size:11px;color:var(--mt);margin-top:3px">${a.desc}</div><div style="font-size:10px;font-weight:700;color:var(--gold);margin-top:8px">+${a.xp} XP unlocked</div>`;
+  t.style.cssText='position:fixed;bottom:200px;left:50%;transform:translateX(-50%);background:var(--s1);border:1px solid color-mix(in srgb,var(--gold) 30%,transparent);padding:20px 28px;border-radius:22px;text-align:center;z-index:999;min-width:210px;box-shadow:0 20px 50px -10px rgba(0,0,0,.5);opacity:0;transition:opacity .4s';
+  document.body.appendChild(t);requestAnimationFrame(()=>{t.style.opacity='1';});
+  setTimeout(()=>{t.style.opacity='0';setTimeout(()=>t.remove(),500);},3500);
+}
+function checkAwards(){
+  const d=scholarData;
+  const checks={
+    first_study:d.studySessions>=1,streak_3:streak>=3,streak_7:streak>=7,streak_30:streak>=30,
+    books_5:(d.booksExplored||[]).length>=5,word_study:(d.wordStudies||0)>=3,
+    prayer_10:(prayers||[]).length>=10,saved_20:(saved||[]).length>=20,
+    night_owl:new Date().getHours()===0||new Date().getHours()>=23,
+    early_bird_study:new Date().getHours()<6,
+  };
+  let changed=false;
+  d.awards.forEach(a=>{if(!a.earned&&checks[a.id]){a.earned=true;showAwardToast(a);changed=true;}});
+  if(changed)saveScholar();
+}
+function renderScholarCard(){
+  const xp=scholarData.xp||0;const rank=getRank(xp);
+  const nextRank=RANKS.find(r=>r.min>xp);
+  const pct=nextRank?Math.round((xp-rank.min)/(nextRank.min-rank.min)*100):100;
+  const name=localStorage.uf_nm||'Scholar';
+  if($('scholar-avatar'))$('scholar-avatar').textContent=rank.icon;
+  if($('scholar-rank-badge')){const b=$('scholar-rank-badge');b.textContent=rank.name;b.style.color=rank.color;b.style.background='color-mix(in srgb,'+rank.color+' 10%,transparent)';b.style.borderColor='color-mix(in srgb,'+rank.color+' 22%,transparent)';}
+  if($('scholar-xp-label'))$('scholar-xp-label').textContent=xp+' XP'+(nextRank?' · '+nextRank.min+' to '+nextRank.name:' · Max Rank');
+  if($('scholar-title'))$('scholar-title').textContent=name+"'s Journey";
+  if($('xp-bar'))setTimeout(()=>{$('xp-bar').style.width=pct+'%';},80);
+  if($('scholar-streak'))$('scholar-streak').textContent=streak||0;
+}
+function renderQuests(){
+  if(!$('quest-row'))return;
+  const active=scholarData.quests.filter(q=>!q.done).slice(0,3);
+  $('quest-row').innerHTML=active.length?active.map(q=>`
+    <div class="pcard" style="padding:14px 16px">
+      <div style="display:flex;align-items:center;gap:10px">
+        <div style="font-size:20px;width:36px;text-align:center;flex-shrink:0">${q.icon}</div>
+        <div style="flex:1;min-width:0">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:3px">
+            <span style="font-size:13px;font-weight:600;color:var(--cream)">${q.name}</span>
+            <span style="font-size:10px;font-weight:700;color:var(--gold);flex-shrink:0;margin-left:8px">+${q.reward} XP</span>
+          </div>
+          <div style="font-size:11px;color:var(--mt);margin-bottom:${q.total?'6px':'0'}">${q.desc}</div>
+          ${q.total?`<div style="height:3px;border-radius:2px;background:var(--s3);overflow:hidden"><div style="height:100%;border-radius:2px;background:linear-gradient(90deg,var(--sage),var(--gold));width:${Math.round((q.progress||0)/q.total*100)}%"></div></div>`:''}
+        </div>
+        <span style="font-size:9px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;padding:3px 8px;border-radius:100px;background:color-mix(in srgb,var(--sky) 10%,transparent);color:var(--sky);white-space:nowrap;flex-shrink:0">${q.type}</span>
+      </div>
+    </div>`).join('')
+  :`<div class="pcard" style="text-align:center;padding:18px"><p style="color:var(--mt);font-size:13px">All quests complete! 🎉</p></div>`;
+}
+function renderAwards(){
+  if(!$('award-shelf'))return;
+  const earned=scholarData.awards.filter(a=>a.earned);
+  const locked=scholarData.awards.filter(a=>!a.earned);
+  if($('award-count'))$('award-count').textContent=earned.length+'/'+scholarData.awards.length+' earned';
+  $('award-shelf').innerHTML=
+    earned.map(a=>`<div style="flex-shrink:0;text-align:center" title="${a.name}: ${a.desc}">
+      <div style="width:52px;height:52px;border-radius:14px;background:color-mix(in srgb,var(--gold) 12%,transparent);border:1.5px solid color-mix(in srgb,var(--gold) 25%,transparent);display:flex;align-items:center;justify-content:center;font-size:22px;margin-bottom:4px">${a.icon}</div>
+      <div style="font-size:9px;font-weight:700;color:var(--gold);width:52px;line-height:1.2;text-align:center">${a.name}</div>
+    </div>`).join('')+
+    locked.slice(0,4).map(a=>`<div style="flex-shrink:0;text-align:center;opacity:.3" title="Locked: ${a.desc}">
+      <div style="width:52px;height:52px;border-radius:14px;background:var(--s2);border:1px solid var(--bd);display:flex;align-items:center;justify-content:center;font-size:22px;filter:grayscale(1);margin-bottom:4px">${a.icon}</div>
+      <div style="font-size:9px;font-weight:700;color:var(--dm);width:52px;line-height:1.2;text-align:center">${a.name}</div>
+    </div>`).join('');
+}
+function openScholarProfile(){
+  const xp=scholarData.xp||0;const rank=getRank(xp);
+  const body=$('scholar-panel-body');if(!body)return;
+  body.innerHTML=`
+    <div style="text-align:center;padding:0 0 28px">
+      <div style="font-size:60px;margin-bottom:10px">${rank.icon}</div>
+      <div style="font-family:'Cormorant Garamond',serif;font-size:30px;font-weight:700;color:var(--cream)">${localStorage.uf_nm||'Scholar'}</div>
+      <div style="font-size:14px;color:${rank.color};font-weight:700;margin-top:4px">${rank.name}</div>
+      <div style="font-size:12px;color:var(--mt);margin-top:3px">${xp} Total XP · ${streak||0}-day streak</div>
+    </div>
+    <div style="margin-bottom:16px">
+      <div style="font-size:10px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--dm);margin-bottom:10px">All Ranks</div>
+      ${RANKS.map(r=>{const cur=xp>=r.min&&(RANKS.find(rr=>rr.min>r.min)?xp<RANKS.find(rr=>rr.min>r.min).min:true);return`<div style="display:flex;align-items:center;gap:12px;padding:10px 14px;border-radius:14px;margin-bottom:6px;background:${cur?'color-mix(in srgb,'+r.color+' 8%,var(--s2))':'var(--s2)'};border:1px solid ${cur?'color-mix(in srgb,'+r.color+' 25%,transparent)':'var(--bd)'}">
+        <span style="font-size:24px">${r.icon}</span>
+        <div style="flex:1"><div style="font-size:13px;font-weight:600;color:${cur?r.color:'var(--mt)'}">${r.name}</div><div style="font-size:11px;color:var(--dm)">${r.min}+ XP</div></div>
+        ${cur?`<span style="font-size:10px;font-weight:800;color:${r.color}">CURRENT</span>`:xp>=r.min?'<i class="fa-solid fa-check" style="color:var(--sage);font-size:11px"></i>':'<i class="fa-solid fa-lock" style="color:var(--dm);font-size:11px"></i>'}
+      </div>`}).join('')}
+    </div>
+    <div>
+      <div style="font-size:10px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--dm);margin-bottom:10px">Awards (${scholarData.awards.filter(a=>a.earned).length}/${scholarData.awards.length})</div>
+      ${scholarData.awards.map(a=>`<div style="display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:14px;margin-bottom:6px;background:var(--s2);border:1px solid var(--bd);opacity:${a.earned?1:.38}">
+        <span style="font-size:22px">${a.icon}</span>
+        <div style="flex:1"><div style="font-size:13px;font-weight:600;color:${a.earned?'var(--cream)':'var(--mt)'}">${a.name}</div><div style="font-size:11px;color:var(--dm)">${a.desc}</div></div>
+        <span style="font-size:10px;font-weight:700;color:${a.earned?'var(--gold)':'var(--dm)'}">+${a.xp} XP</span>
+      </div>`).join('')}
+    </div>`;
+  $('scholar-panel').style.display='flex';
+}
+function closeScholarProfile(){$('scholar-panel').style.display='none';}
+function openAllQuests(){
+  const body=$('quests-panel-body');if(!body)return;
+  body.innerHTML=scholarData.quests.map(q=>`<div class="pcard mb-3" style="opacity:${q.done?.5:1}">
+    <div style="display:flex;align-items:flex-start;gap:12px">
+      <div style="font-size:24px;flex-shrink:0">${q.icon}</div>
+      <div style="flex:1">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
+          <span style="font-size:14px;font-weight:600;color:var(--cream)">${q.name}</span>
+          <span style="font-size:10px;font-weight:700;color:var(--gold)">+${q.reward} XP</span>
+        </div>
+        <div style="font-size:12px;color:var(--mt);margin-bottom:8px">${q.desc}</div>
+        ${q.total?`<div style="height:3px;border-radius:2px;background:var(--s3);overflow:hidden;margin-bottom:6px"><div style="height:100%;border-radius:2px;background:linear-gradient(90deg,var(--sage),var(--gold));width:${Math.round((q.progress||0)/q.total*100)}%"></div></div>`:''}
+        <div style="display:flex;align-items:center;justify-content:space-between">
+          <span style="font-size:9px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;padding:3px 8px;border-radius:100px;background:color-mix(in srgb,var(--sky) 10%,transparent);color:var(--sky)">${q.type}</span>
+          ${q.done?'<span style="font-size:11px;color:var(--sage)">✓ Complete</span>':''}
+        </div>
+      </div>
+    </div>
+  </div>`).join('');
+  $('quests-panel').style.display='flex';
+}
+function closeAllQuests(){$('quests-panel').style.display='none';}
+
+function bookStudy(b){
+  if(!scholarData.booksExplored)scholarData.booksExplored=[];
+  if(!scholarData.booksExplored.includes(b)){
+    scholarData.booksExplored.push(b);saveScholar();grantXP(15,'Explored '+b);
+    if(scholarData.booksExplored.length>=5){const a=scholarData.awards.find(x=>x.id==='books_5');if(a&&!a.earned){a.earned=true;saveScholar();showAwardToast(a);}}
+  }
+  promptAI('Overview of '+b+' — author, date, purpose, themes, key verses, outline');
+}
+
 function rStudy(){
-$('study-j').innerHTML=`<div class="pcard"><div class="flex items-center justify-between mb-3"><h4 class="font-semibold text-base" style="color:var(--cream)">Journey: ${journey.book}</h4><span class="text-xs font-bold" style="color:var(--sage)">Day ${journey.day}/${journey.total}</span></div><div class="h-2 rounded-full overflow-hidden mb-4" style="background:var(--s3)"><div class="h-full rounded-full" style="width:${Math.round(journey.day/journey.total*100)}%;background:linear-gradient(90deg,var(--sage),var(--gold))"></div></div><div class="flex gap-2"><button class="chip" onclick="promptAI('Continue my ${journey.book} journey — Day ${journey.day}')">Continue</button><button class="chip" onclick="advJ()">✓ Complete Day</button></div></div>`;
-const OT_GROUPS=[['The Law',['Genesis','Exodus','Leviticus','Numbers','Deuteronomy']],['Historical',['Joshua','Judges','Ruth','1 Samuel','2 Samuel','1 Kings','2 Kings','1 Chronicles','2 Chronicles','Ezra','Nehemiah','Esther']],['Poetry & Wisdom',['Job','Psalms','Proverbs','Ecclesiastes','Song of Solomon']],['Major Prophets',['Isaiah','Jeremiah','Lamentations','Ezekiel','Daniel']],['Minor Prophets',['Hosea','Joel','Amos','Obadiah','Jonah','Micah','Nahum','Habakkuk','Zephaniah','Haggai','Zechariah','Malachi']]];
-const NT_GROUPS=[['Gospels & Acts',['Matthew','Mark','Luke','John','Acts']],['Paul\'s Letters',['Romans','1 Corinthians','2 Corinthians','Galatians','Ephesians','Philippians','Colossians','1 Thessalonians','2 Thessalonians','1 Timothy','2 Timothy','Titus','Philemon']],['General Letters',['Hebrews','James','1 Peter','2 Peter','1 John','2 John','3 John','Jude']],['Prophecy',['Revelation']]];
-function bookGrid(groups){return groups.map(([sec,books])=>`<div class="mb-5"><div class="bible-section-hd">${sec}</div><div class="grid grid-cols-3 sm:grid-cols-5 md:grid-cols-6 lg:grid-cols-7 gap-1.5">${books.map(b=>`<button class="text-xs font-medium py-2 px-1.5 rounded-lg text-center truncate transition" style="background:var(--s2);border:1px solid var(--bd);color:var(--mt)" onmouseenter="this.style.borderColor='color-mix(in srgb,var(--gold) 25%,transparent)';this.style.color='var(--cream)'" onmouseleave="this.style.borderColor='var(--bd)';this.style.color='var(--mt)'" onclick="promptAI('Overview of ${b} — author, date, purpose, themes, outline')">${b}</button>`).join('')}</div></div>`).join('');}
-$('bks').innerHTML=`<div class="mb-2"><div class="text-sm font-bold mb-1" style="color:var(--gold)">Old Testament</div>${bookGrid(OT_GROUPS)}</div><div><div class="text-sm font-bold mb-1 mt-4" style="color:var(--gold)">New Testament</div>${bookGrid(NT_GROUPS)}</div>`;
-$('stupr').innerHTML=[['Character Study','Deep dive into a biblical character'],['Word Study','Hebrew/Greek meaning of a key word'],['Topical Study','What the whole Bible says about a topic'],['Book Overview','Complete overview of any book']].map(([t,d])=>`<div class="pcard cursor-pointer flex items-center gap-4" onclick="promptAI('${d}')"><div class="w-9 h-9 rounded-lg flex items-center justify-center shrink-0" style="background:color-mix(in srgb,var(--gold) 8%,transparent)"><i class="fa-solid fa-graduation-cap" style="color:var(--gold)"></i></div><div><div class="font-semibold text-base" style="color:var(--cream)">${t}</div><div class="text-sm mt-0.5" style="color:var(--mt)">${d}</div></div></div>`).join('');}
- 
-/* ═══ PRAY ═══ */
-function rPray(){
-$('pchips').innerHTML=[['Strength','Prayer for strength and courage'],['Gratitude','Prayer of deep gratitude'],['Family','Blessing over my family'],['Guidance','Prayer for a decision'],['Healing','Prayer for healing'],['Forgiveness','Prayer about forgiving someone']].map(([l,q])=>`<div class="chip" onclick="promptAI('${q}')">${l}</div>`).join('');
-if(!prayers.length){$('pjrn').innerHTML=`<div class="text-center py-12"><div class="empty-illo" style="background:color-mix(in srgb,var(--rose) 8%,transparent);border:1px solid color-mix(in srgb,var(--rose) 15%,transparent)"><svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M20 8C16 8 13 11 13 15c0 2 .8 3.8 2 5l5 7 5-7c1.2-1.2 2-3 2-5 0-4-3-7-7-7z" stroke="var(--rose)" stroke-width="1.5" fill="none"/><path d="M14 28c-3 1.5-5 3.5-5 5.5h22c0-2-2-4-5-5.5" stroke="var(--rose)" stroke-width="1.5" stroke-linecap="round"/></svg></div><h3 class="font-display text-xl font-bold mb-2" style="color:var(--cream)">Your prayer journal awaits</h3><p class="text-sm leading-relaxed mb-6 max-w-xs mx-auto" style="color:var(--mt)">Prayers saved from your conversations appear here — a personal record of your walk with God.</p><button class="chip-primary" onclick="promptAI('Help me write a prayer for today')">✦ Write Your First Prayer</button></div>`;}
-else{$('pjrn').innerHTML=prayers.map((p,i)=>`<div class="pcard mb-3"><p class="text-[15px] leading-relaxed">${esc(p.text).substring(0,300)}${p.text.length>300?'…':''}</p><div class="flex items-center justify-between mt-3"><span class="text-xs" style="color:var(--dm)">${new Date(p.date).toLocaleDateString('en-US',{month:'short',day:'numeric'})}</span><div class="flex gap-3"><button class="text-xs font-semibold" style="color:var(--gold)" onclick="promptAI('Continue this prayer: ${esc(p.text.substring(0,80))}')">Continue</button><button class="text-xs" style="color:var(--dm)" onclick="prayers.splice(${i},1);localStorage.uf_pr=JSON.stringify(prayers);rPray()">Remove</button></div></div></div>`).join('');}}
- 
-/* ═══ SAVED ═══ */
-function rSaved(){$('scnt').textContent=saved.length+' moment'+(saved.length!==1?'s':'');
-if(!saved.length){$('slst').innerHTML=`<div class="text-center py-12"><i class="fa-solid fa-bookmark text-3xl mb-3" style="color:var(--dm)"></i><h3 class="font-display text-xl font-bold" style="color:var(--cream)">No saved moments</h3><p class="text-base mt-2" style="color:var(--mt)">Save verses, prayers, and reflections as you explore.</p></div>`;return;}
-$('slst').innerHTML=saved.map((s,i)=>{const ic=s.type==='verse'?'fa-book-bible':s.type==='prayer'?'fa-hands-praying':'fa-bookmark';const lb=s.ref||s.type||'Reflection';
-return`<div class="pcard mb-3"><div class="flex items-center gap-2 mb-2"><i class="fa-solid ${ic} text-sm" style="color:var(--gold)"></i><span class="text-xs font-bold uppercase tracking-wide" style="color:var(--gold)">${esc(lb)}</span><span class="text-xs ml-auto" style="color:var(--dm)">${new Date(s.date).toLocaleDateString('en-US',{month:'short',day:'numeric'})}</span></div><p class="text-[15px] leading-relaxed ${s.type==='verse'?'verse-t':''}">${esc(s.text).substring(0,300)}${s.text.length>300?'…':''}</p><div class="flex gap-4 mt-3"><button class="text-sm font-semibold" style="color:var(--gold)" onclick="promptAI('Reflect on: ${esc(s.text.substring(0,80))}')">Reflect</button><button class="text-sm font-semibold" style="color:var(--mt)" onclick="promptAI('Turn into a prayer: ${esc(s.text.substring(0,80))}')">Pray</button><button class="text-xs ml-auto" style="color:var(--dm)" onclick="saved.splice(${i},1);localStorage.uf_sv=JSON.stringify(saved);rSaved()">Remove</button></div></div>`;}).join('');}
- 
-/* ═══ EVENT ═══ */
-function openEvent(){$('cp-t').textContent='Unity in the City';$('cp-s').textContent='Flagship Event';$('cp').classList.add('open');document.body.style.overflow='hidden';
-$('cp-b').innerHTML=`<div class="rounded-2xl overflow-hidden mb-6 relative" style="background:linear-gradient(145deg,#0d0520,#1a0a2e,#2d1150,#4a1a6b)"><div class="absolute inset-0" style="background:radial-gradient(circle at 75% 20%,rgba(255,200,50,.35),transparent 55%),radial-gradient(circle at 15% 85%,rgba(180,80,255,.25),transparent 50%),radial-gradient(circle at 50% 110%,rgba(201,168,76,.15),transparent 60%)"></div><div class="absolute inset-0 opacity-10" style="background-image:repeating-linear-gradient(45deg,rgba(255,255,255,.03) 0,rgba(255,255,255,.03) 1px,transparent 1px,transparent 10px)"></div><div class="relative z-10 px-8 py-12 text-center"><span class="text-xs font-bold uppercase tracking-[.15em] px-4 py-1.5 rounded-full inline-block mb-6" style="background:rgba(255,200,50,.12);color:#FFD040;border:1px solid rgba(255,200,50,.25)">Kingston · National Revival · National Stadium</span><h1 class="font-display text-4xl sm:text-5xl font-bold text-white mb-3 leading-tight">Unity in the City</h1><p class="text-base mb-1" style="color:rgba(255,255,255,.65)">National Stadium · Kingston, Jamaica</p><p class="text-sm mb-6" style="color:rgba(255,255,255,.4)">National Revival · Worship · Ministry · Transformation</p><div class="flex justify-center gap-3 flex-wrap"><span class="text-xs font-bold px-3 py-1.5 rounded-full" style="background:rgba(255,255,255,.08);color:rgba(255,255,255,.7);border:1px solid rgba(255,255,255,.1)">🎤 Live Worship</span><span class="text-xs font-bold px-3 py-1.5 rounded-full" style="background:rgba(255,255,255,.08);color:rgba(255,255,255,.7);border:1px solid rgba(255,255,255,.1)">🏟️ National Stadium</span><span class="text-xs font-bold px-3 py-1.5 rounded-full" style="background:rgba(255,255,255,.08);color:rgba(255,255,255,.7);border:1px solid rgba(255,255,255,.1)">🙏 Ministry</span></div></div></div>
-<p class="text-base leading-relaxed mb-6" style="color:var(--txt)">Kingston's premier non-denominational Christian gospel event — a National Revival at the National Stadium bringing together thousands for worship, ministry, and transformation.</p>
-<h4 class="text-xs font-bold uppercase tracking-widest mb-3" style="color:var(--mt)">Get Tickets</h4>
-<p class="text-xs mb-3" style="color:var(--dm)">Swipe to explore tiers →</p>
-<div class="tix-scroll" id="tix">
- 
-<div class="tix-card tier-eb" onclick="selTix('earlybird','Early Bird','J$3,500')">
-  <span class="tix-badge" style="background:color-mix(in srgb,var(--sage) 18%,transparent);color:var(--sage)">Best Deal</span>
-  <div class="tix-name">Early Bird</div>
-  <div class="tix-desc">Limited seats · All general areas · First come first served</div>
-  <div class="tix-price" style="color:var(--sage)">J$3,500</div>
-  <div class="tix-btn" style="background:color-mix(in srgb,var(--sage) 18%,transparent);color:var(--sage)">Select →</div>
-</div>
- 
-<div class="tix-card tier-ga" onclick="selTix('ga','General Admission','J$5,000')">
-  <span class="tix-badge" style="background:color-mix(in srgb,var(--mt) 18%,transparent);color:var(--mt)">Standard</span>
-  <div class="tix-name">General Admission</div>
-  <div class="tix-desc">All general areas · Standard entry · Open seating</div>
-  <div class="tix-price" style="color:var(--txt)">J$5,000</div>
-  <div class="tix-btn" style="background:color-mix(in srgb,var(--mt) 15%,transparent);color:var(--cream)">Select →</div>
-</div>
- 
-<div class="tix-card tier-vip" onclick="selTix('vip','VIP','J$10,000')">
-  <span class="tix-badge" style="background:color-mix(in srgb,var(--gold) 18%,transparent);color:var(--gold)">Popular</span>
-  <div class="tix-name">VIP</div>
-  <div class="tix-desc">Priority entry · Reserved VIP seating · Exclusive gift bag</div>
-  <div class="tix-price" style="color:var(--gold)">J$10,000</div>
-  <div class="tix-btn" style="background:var(--gold);color:var(--bg)">Select →</div>
-</div>
- 
-<div class="tix-card tier-vvip" onclick="selTix('vvip','VVIP','J$15,000')">
-  <span class="tix-badge" style="background:color-mix(in srgb,var(--gold) 25%,transparent);color:var(--gold)">Premium</span>
-  <div class="tix-name">VVIP</div>
-  <div class="tix-desc">Front stage · Backstage access · VIP lounge · Gift bag</div>
-  <div class="tix-price" style="color:var(--gold)">J$15,000</div>
-  <div class="tix-btn" style="background:var(--gold);color:var(--bg)">Select →</div>
-</div>
- 
-<div class="tix-card tier-ultra" onclick="selTix('ultra','Ultra','J$25,000')">
-  <span class="tix-badge" style="background:color-mix(in srgb,var(--sky) 18%,transparent);color:var(--sky)">Exclusive</span>
-  <div class="tix-name">Ultra</div>
-  <div class="tix-desc">Premium front stage · Artist meet & greet · VIP lounge · Concierge</div>
-  <div class="tix-price" style="color:var(--sky)">J$25,000</div>
-  <div class="tix-btn" style="background:color-mix(in srgb,var(--sky) 20%,transparent);color:var(--sky)">Select →</div>
-</div>
- 
-<div class="tix-card tier-ult" onclick="selTix('ultimate','Ultimate Experience Box','J$150,000')">
-  <span class="tix-badge" style="background:linear-gradient(90deg,rgba(255,160,60,.25),rgba(180,80,255,.25));color:#FFD080">✦ Ultimate</span>
-  <div class="tix-name">Ultimate Experience Box</div>
-  <div class="tix-desc">Private luxury box · Full catering · Personal host · All access passes · Keepsakes</div>
-  <div class="tix-price" style="background:linear-gradient(90deg,var(--gold),var(--rose));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">J$150,000</div>
-  <div class="tix-btn" style="background:linear-gradient(90deg,color-mix(in srgb,var(--gold) 25%,transparent),color-mix(in srgb,var(--rose) 20%,transparent));color:#FFD080">Select →</div>
-</div>
- 
-</div>
-<h4 class="text-xs font-bold uppercase tracking-widest mb-3" style="color:var(--mt)">What to Expect</h4>
-<div class="grid grid-cols-2 gap-3 mb-6">${[['🎤','Live Worship','Top gospel artists'],['🏟️','National Stadium','Kingston\'s iconic venue'],['💃','Dance','Praise dance & choreography'],['🙏','Ministry','Powerful altar call & prayer']].map(([e,t,d])=>`<div class="pcard text-center"><div class="text-3xl mb-2">${e}</div><div class="font-semibold text-base" style="color:var(--cream)">${t}</div><div class="text-sm mt-0.5" style="color:var(--mt)">${d}</div></div>`).join('')}</div>
-<div class="pcard text-center"><p class="text-sm leading-relaxed" style="color:var(--mt)">More than a concert — a <strong style="color:var(--cream)">movement</strong> to unite Jamaica for the glory of God.</p></div>`;}
-function selTix(k,n,p){$('tix').innerHTML=`<div class="pcard" style="border-color:color-mix(in srgb,var(--gold) 25%,transparent)"><div class="flex items-center justify-between mb-5"><h3 class="font-semibold text-lg" style="color:var(--cream)">${n}</h3><span class="font-bold text-lg" style="color:var(--gold)">${p}</span></div><div class="flex flex-col gap-4"><div><label class="text-xs font-bold uppercase tracking-wider block mb-1.5" style="color:var(--dm)">Full Name</label><input type="text" class="w-full rounded-xl px-4 py-3 text-base outline-none" style="background:var(--s3);border:1px solid var(--bd);color:var(--cream)" placeholder="Your name"></div><div><label class="text-xs font-bold uppercase tracking-wider block mb-1.5" style="color:var(--dm)">Email</label><input type="email" class="w-full rounded-xl px-4 py-3 text-base outline-none" style="background:var(--s3);border:1px solid var(--bd);color:var(--cream)" placeholder="you@email.com"></div><div><label class="text-xs font-bold uppercase tracking-wider block mb-1.5" style="color:var(--dm)">Phone</label><input type="tel" class="w-full rounded-xl px-4 py-3 text-base outline-none" style="background:var(--s3);border:1px solid var(--bd);color:var(--cream)" placeholder="876-555-0000"></div><div class="flex items-center gap-3"><label class="text-xs font-bold uppercase tracking-wider" style="color:var(--dm)">Qty</label><select class="rounded-lg px-4 py-2.5 text-base outline-none" style="background:var(--s3);border:1px solid var(--bd);color:var(--cream)"><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></div><button onclick="this.textContent='✓ Ticket Reserved!';this.style.opacity='.6';this.disabled=true" class="w-full py-4 rounded-xl font-bold text-base transition" style="background:var(--gold);color:var(--bg)">Purchase — ${p}</button></div></div>`;}
+  if(!$('scholar-avatar'))return;
+  scholarData.studySessions=(scholarData.studySessions||0)+1;saveScholar();
+  renderScholarCard();renderQuests();renderAwards();checkAwards();
+
+  $('study-j').innerHTML=`<div class="pcard" style="padding:16px">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+      <div><div style="font-size:9px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--dm);margin-bottom:2px">Book Journey</div>
+        <div style="font-size:15px;font-weight:600;color:var(--cream)">${journey.book}</div></div>
+      <div style="text-align:right"><div style="font-size:22px;font-weight:700;font-family:'Cormorant Garamond',serif;color:var(--gold)">${journey.day}<span style="font-size:12px;color:var(--mt)">/${journey.total}</span></div>
+        <div style="font-size:9px;color:var(--dm)">days complete</div></div>
+    </div>
+    <div style="height:5px;border-radius:3px;overflow:hidden;background:var(--s3);margin-bottom:12px">
+      <div style="height:100%;border-radius:3px;background:linear-gradient(90deg,var(--sage),var(--gold));width:${Math.round(journey.day/journey.total*100)}%"></div>
+    </div>
+    <div style="display:flex;gap:8px">
+      <button class="chip-primary" style="flex:1;text-align:center;justify-content:center" onclick="promptAI('Continue my ${journey.book} journey — Day ${journey.day}: give me the reading, key reflection, and a closing prayer');grantXP(30,'Daily study')">▶ Continue</button>
+      <button class="chip" onclick="advJ();grantXP(20,'Day completed')">✓ Done</button>
+    </div>
+  </div>`;
+
+  const modes=[
+    {icon:'👤',t:'Character Study',d:'Life, faith & lessons of a biblical figure',q:"Deep dive into a biblical character — life, faith, key moments, lessons",xp:40},
+    {icon:'🔬',t:'Word Study',d:'Hebrew & Greek root meanings',q:"Hebrew/Greek meaning of a key biblical word — etymology, usage, depth",xp:35},
+    {icon:'🌐',t:'Topical Study',d:'What the whole Bible says on one topic',q:"What the whole Bible says about a topic — OT, NT, key verses, application",xp:35},
+    {icon:'📖',t:'Book Overview',d:'Full breakdown of any Bible book',q:"Complete overview of any Bible book — author, date, themes, outline",xp:30},
+  ];
+  $('stupr').innerHTML=modes.map(m=>`<div class="pcard cursor-pointer" style="padding:14px" onclick="promptAI('${m.q}');grantXP(${m.xp},'${m.t}')">
+    <div style="font-size:22px;margin-bottom:8px">${m.icon}</div>
+    <div style="font-size:13px;font-weight:600;color:var(--cream);margin-bottom:3px">${m.t}</div>
+    <div style="font-size:11px;color:var(--mt);margin-bottom:8px">${m.d}</div>
+    <div style="font-size:10px;font-weight:700;color:var(--gold)">+${m.xp} XP</div>
+  </div>`).join('');
+
+  const OT_GROUPS=[['The Law',['Genesis','Exodus','Leviticus','Numbers','Deuteronomy']],['Historical',['Joshua','Judges','Ruth','1 Samuel','2 Samuel','1 Kings','2 Kings','1 Chronicles','2 Chronicles','Ezra','Nehemiah','Esther']],['Poetry & Wisdom',['Job','Psalms','Proverbs','Ecclesiastes','Song of Solomon']],['Major Prophets',['Isaiah','Jeremiah','Lamentations','Ezekiel','Daniel']],['Minor Prophets',['Hosea','Joel','Amos','Obadiah','Jonah','Micah','Nahum','Habakkuk','Zephaniah','Haggai','Zechariah','Malachi']]];
+  const NT_GROUPS=[["Gospels & Acts",['Matthew','Mark','Luke','John','Acts']],["Paul's Letters",['Romans','1 Corinthians','2 Corinthians','Galatians','Ephesians','Philippians','Colossians','1 Thessalonians','2 Thessalonians','1 Timothy','2 Timothy','Titus','Philemon']],['General Letters',['Hebrews','James','1 Peter','2 Peter','1 John','2 John','3 John','Jude']],['Prophecy',['Revelation']]];
+  function bookGrid(groups){return groups.map(([sec,books])=>`<div class="mb-4"><div class="bible-section-hd">${sec}</div><div class="grid grid-cols-3 sm:grid-cols-5 gap-1.5">${books.map(b=>`<button class="text-xs font-medium py-2 px-1 rounded-lg text-center truncate" style="background:var(--s2);border:1px solid var(--bd);color:var(--mt)" onmouseenter="this.style.borderColor='color-mix(in srgb,var(--gold) 25%,transparent)';this.style.color='var(--cream)'" onmouseleave="this.style.borderColor='var(--bd)';this.style.color='var(--mt)'" onclick="bookStudy('${b}')">${b}</button>`).join('')}</div></div>`).join('');}
+  $('bks').innerHTML=`<div class="mb-2"><div class="text-xs font-bold uppercase tracking-wider mb-2" style="color:var(--gold)">Old Testament</div>${bookGrid(OT_GROUPS)}</div><div><div class="text-xs font-bold uppercase tracking-wider mb-2 mt-3" style="color:var(--gold)">New Testament</div>${bookGrid(NT_GROUPS)}</div>`;
+}
+/* ═══ OVERLAY PANEL ═══ */
 function cpClose(){$('cp').classList.remove('open');document.body.style.overflow='';}
- 
- 
- 
- 
-initSplash();
+function cpOpen(title,sub,html){$('cp-t').textContent=title;$('cp-s').textContent=sub||'Unity Faith';$('cp-b').innerHTML=html;$('cp').classList.add('open');document.body.style.overflow='hidden';}
+
+/* ═══ EVENT / TICKETS ═══ */
+const TIX_DATA={
+  earlybird:{tag:'Limited Offer',badge:'Best Deal',
+    desc:"Jump in early and secure your place at Kingston's biggest gospel revival. Early Bird access gets you into all general areas at the best possible price — first come, first served. Don't miss your moment.",
+    color:'#0e1f10',accentColor:'#7A9E7E',
+    bg:'linear-gradient(145deg,#0e1f10,#1a3d1e,#0e1f10)',animated:false,
+    btnBg:'#7A9E7E',btnColor:'#0e1f10',
+    perks:[{icon:'🎟️',name:'General Area Access',sub:'Full access to all general seating and standing areas'},{icon:'🎤',name:'Live Worship & Ministry',sub:'Experience all performances and the full altar call'},{icon:'💚',name:'Best Price Guaranteed',sub:'Lowest tier — locked in before prices rise'}]},
+  ga:{tag:'Standard Entry',badge:'General',
+    desc:"Your entry into Unity in the City. Join thousands at the National Stadium for a night of live worship, powerful ministry, and praise that will move you. Standard access to all general areas.",
+    color:'#13100d',accentColor:'#8C8478',
+    bg:'linear-gradient(145deg,#13100d,#221f19,#13100d)',animated:false,
+    btnBg:'#8C8478',btnColor:'#0F0D0A',
+    perks:[{icon:'🎟️',name:'Full General Access',sub:'All general seating and viewing areas'},{icon:'🏟️',name:'National Stadium',sub:'Experience the energy of 20,000+ gathered in worship'},{icon:'🙏',name:'Worship & Ministry',sub:'Live praise, dance, and the powerful altar call'}]},
+  vip:{tag:'VIP Experience',badge:'Popular',
+    desc:"Step into a higher level. VIP gets you priority entry — no long lines — reserved seating with better sightlines, and an exclusive gift bag curated for the evening. This is worship with distinction.",
+    color:'#1a1200',accentColor:'#C9A84C',
+    bg:'linear-gradient(145deg,#1a1200,#2e2000,#1a1200)',animated:false,
+    btnBg:'#C9A84C',btnColor:'#0F0D0A',
+    perks:[{icon:'⚡',name:'Priority Entry',sub:'Skip the general queue — dedicated VIP entrance'},{icon:'💺',name:'Reserved VIP Seating',sub:'Elevated sightlines with dedicated VIP section'},{icon:'🎁',name:'Exclusive Gift Bag',sub:'Curated keepsakes and surprises for the evening'},{icon:'🎤',name:'Full Event Access',sub:'All worship, ministry, and performances'}]},
+  vvip:{tag:'VVIP Access',badge:'Premium',
+    desc:"You're not just attending — you're at the front. VVIP places you where the atmosphere is thickest, closest to the stage where worship becomes overwhelming. Backstage access and the exclusive lounge await.",
+    color:'#6b3d00',accentColor:'#FFD060',
+    bg:'linear-gradient(135deg,#1a0d00,#3a1f00,#6b3d00,#3a1f00,#1a0d00)',animated:true,
+    btnBg:'linear-gradient(90deg,#C9A84C,#FFD060)',btnColor:'#0F0D0A',
+    perks:[{icon:'🎯',name:'Front Stage Positioning',sub:'Closest access to the main stage — feel every moment'},{icon:'🚪',name:'Backstage Access',sub:'Go behind the scenes before the show begins'},{icon:'🥂',name:'VVIP Lounge',sub:'Exclusive lounge with seating, refreshments, and ambiance'},{icon:'🎁',name:'Premium Gift Bag',sub:'Elevated keepsakes and exclusive VVIP items'},{icon:'📸',name:'Photo Opportunity',sub:'Designated VVIP photo moments and memories'}]},
+  ultra:{tag:'Ultra Tier',badge:'Exclusive',
+    desc:"Few will experience what you're about to. Ultra is for those who want everything — premium positioning, personal concierge, meet & greet access with artists, and the full VVIP lounge experience elevated further.",
+    color:'#000d1a',accentColor:'#7DAAC4',
+    bg:'linear-gradient(135deg,#000d1a,#001f3a,#003855,#006688,#003855,#000d1a)',animated:true,
+    btnBg:'linear-gradient(90deg,#3d7a9e,#7DAAC4)',btnColor:'#000d1a',
+    perks:[{icon:'🌟',name:'Premium Front Stage',sub:'Ultra-close positioning with dedicated Ultra section'},{icon:'🎤',name:'Artist Meet & Greet',sub:'Exclusive access to meet and greet selected artists'},{icon:'🛎️',name:'Personal Concierge',sub:'Your own host for the evening from arrival to exit'},{icon:'🥂',name:'Full VVIP Lounge',sub:'Complimentary food, drinks, and ultra lounge access'},{icon:'🎁',name:'Ultra Gift Package',sub:'Premium keepsakes, signed items, and exclusive merchandise'},{icon:'🚪',name:'All-Area Access',sub:'Backstage, lounge, and all premium zones'}]},
+  ultimate:{tag:'✦ Ultimate Experience',badge:'Once in a Lifetime',
+    desc:"This is not a ticket. This is a private kingdom. The Ultimate Experience Box is the most exclusive offering at Unity in the City — a fully private luxury box with panoramic views, personal hosting, full catering, and access to every space in the building.",
+    color:'#0d0005',accentColor:'#FFD080',
+    bg:'linear-gradient(135deg,#0d0005,#1a0010,#3a0030,#1a0820,#3a1500,#1a0010,#0d0005)',animated:true,
+    btnBg:'linear-gradient(90deg,#C9A84C,#c47d7d,#9A28AA)',btnColor:'#0d0005',
+    perks:[{icon:'👑',name:'Private Luxury Box',sub:'Fully enclosed premium box with panoramic stadium views'},{icon:'🍽️',name:'Full Catering Service',sub:'Premium food and beverages served throughout the evening'},{icon:'🛎️',name:'Dedicated Personal Host',sub:'Your own host and butler for the entire event'},{icon:'🎤',name:'All-Access Passes',sub:'Every area — backstage, lounge, front stage, artist zones'},{icon:'📸',name:'Private Photo Session',sub:'Professional photography and exclusive content creation'},{icon:'🎁',name:'Ultimate Keepsake Box',sub:'Luxury curated collection of signed and exclusive memorabilia'},{icon:'🚗',name:'VIP Arrival Experience',sub:'Coordinated arrival with dedicated entry and parking'},{icon:'✦',name:'Legacy Recognition',sub:"Named as an Ultimate patron in the evening's programme"}]}
+};
+
+function openEvent(){
+  cpOpen('Unity in the City','Flagship Event',`
+    <div class="rounded-2xl overflow-hidden mb-6 relative" style="background:linear-gradient(145deg,#0d0520,#1a0a2e,#2d1150,#4a1a6b)">
+      <div class="absolute inset-0" style="background:radial-gradient(circle at 75% 20%,rgba(255,200,50,.35),transparent 55%),radial-gradient(circle at 15% 85%,rgba(180,80,255,.25),transparent 50%)"></div>
+      <div class="relative z-10 px-8 py-12 text-center">
+        <span class="text-xs font-bold uppercase tracking-[.15em] px-4 py-1.5 rounded-full inline-block mb-6" style="background:rgba(255,200,50,.12);color:#FFD040;border:1px solid rgba(255,200,50,.25)">Kingston · National Revival · Aug 8, 2025</span>
+        <h1 class="font-display text-4xl sm:text-5xl font-bold text-white mb-3 leading-tight">Unity in the City</h1>
+        <p class="text-base mb-1" style="color:rgba(255,255,255,.65)">National Stadium · Kingston, Jamaica</p>
+        <p class="text-sm mb-6" style="color:rgba(255,255,255,.4)">Revival · Worship · Healing · Breakthrough</p>
+        <div class="flex justify-center gap-3 flex-wrap">
+          <span class="text-xs font-bold px-3 py-1.5 rounded-full" style="background:rgba(255,255,255,.08);color:rgba(255,255,255,.7);border:1px solid rgba(255,255,255,.1)">🎤 Live Worship</span>
+          <span class="text-xs font-bold px-3 py-1.5 rounded-full" style="background:rgba(255,255,255,.08);color:rgba(255,255,255,.7);border:1px solid rgba(255,255,255,.1)">🔥 Healing & Deliverance</span>
+          <span class="text-xs font-bold px-3 py-1.5 rounded-full" style="background:rgba(255,255,255,.08);color:rgba(255,255,255,.7);border:1px solid rgba(255,255,255,.1)">✨ Breakthrough</span>
+        </div>
+      </div>
+    </div>
+    <p class="text-base leading-relaxed mb-6" style="color:var(--txt)">Kingston's premier non-denominational Christian gospel event — a National Revival bringing together thousands for worship, healing, and transformation.</p>
+    <h4 class="text-xs font-bold uppercase tracking-widest mb-3" style="color:var(--mt)">Get Tickets</h4>
+    <p class="text-xs mb-3" style="color:var(--dm)">Swipe to explore tiers →</p>
+    <div class="tix-scroll" id="tix">
+      <div class="tix-card tier-eb" onclick="selTix('earlybird','Early Bird','J$3,500')">
+        <span class="tix-badge" style="background:color-mix(in srgb,var(--sage) 18%,transparent);color:var(--sage)">Best Deal</span>
+        <div class="tix-name">Early Bird</div>
+        <div class="tix-desc">Limited seats · All general areas · First come first served</div>
+        <div class="tix-price" style="color:var(--sage)">J$3,500</div>
+        <div class="tix-btn" style="background:color-mix(in srgb,var(--sage) 18%,transparent);color:var(--sage)">Select →</div>
+      </div>
+      <div class="tix-card tier-ga" onclick="selTix('ga','General Admission','J$5,000')">
+        <span class="tix-badge" style="background:color-mix(in srgb,var(--mt) 18%,transparent);color:var(--mt)">Standard</span>
+        <div class="tix-name">General Admission</div>
+        <div class="tix-desc">All general areas · Standard entry · Open seating</div>
+        <div class="tix-price" style="color:var(--txt)">J$5,000</div>
+        <div class="tix-btn" style="background:color-mix(in srgb,var(--mt) 15%,transparent);color:var(--cream)">Select →</div>
+      </div>
+      <div class="tix-card tier-vip" onclick="selTix('vip','VIP','J$10,000')">
+        <span class="tix-badge" style="background:color-mix(in srgb,var(--gold) 18%,transparent);color:var(--gold)">Popular</span>
+        <div class="tix-name">VIP</div>
+        <div class="tix-desc">Priority entry · Reserved VIP seating · Exclusive gift bag</div>
+        <div class="tix-price" style="color:var(--gold)">J$10,000</div>
+        <div class="tix-btn" style="background:var(--gold);color:var(--bg)">Select →</div>
+      </div>
+      <div class="tix-card tier-vvip" onclick="selTix('vvip','VVIP','J$15,000')">
+        <span class="tix-badge" style="background:color-mix(in srgb,var(--gold) 25%,transparent);color:var(--gold)">Premium</span>
+        <div class="tix-name">VVIP</div>
+        <div class="tix-desc">Front stage · Backstage access · VIP lounge · Gift bag</div>
+        <div class="tix-price" style="color:var(--gold)">J$15,000</div>
+        <div class="tix-btn" style="background:var(--gold);color:var(--bg)">Select →</div>
+      </div>
+      <div class="tix-card tier-ultra" onclick="selTix('ultra','Ultra','J$25,000')">
+        <span class="tix-badge" style="background:color-mix(in srgb,var(--sky) 18%,transparent);color:var(--sky)">Exclusive</span>
+        <div class="tix-name">Ultra</div>
+        <div class="tix-desc">Premium front stage · Artist meet & greet · Concierge</div>
+        <div class="tix-price" style="color:var(--sky)">J$25,000</div>
+        <div class="tix-btn" style="background:color-mix(in srgb,var(--sky) 20%,transparent);color:var(--sky)">Select →</div>
+      </div>
+      <div class="tix-card tier-ult" onclick="selTix('ultimate','Ultimate Experience Box','J$150,000')">
+        <span class="tix-badge" style="background:linear-gradient(90deg,rgba(255,160,60,.25),rgba(180,80,255,.25));color:#FFD080">✦ Ultimate</span>
+        <div class="tix-name">Ultimate Experience Box</div>
+        <div class="tix-desc">Private luxury box · Full catering · Personal host · All access</div>
+        <div class="tix-price" style="background:linear-gradient(90deg,var(--gold),var(--rose));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">J$150,000</div>
+        <div class="tix-btn" style="background:linear-gradient(90deg,color-mix(in srgb,var(--gold) 25%,transparent),color-mix(in srgb,var(--rose) 20%,transparent));color:#FFD080">Select →</div>
+      </div>
+    </div>
+    <h4 class="text-xs font-bold uppercase tracking-widest mb-3 mt-6" style="color:var(--mt)">What to Expect</h4>
+    <div class="grid grid-cols-2 gap-3 mb-6">
+      <div class="pcard text-center"><div class="w-10 h-10 rounded-xl flex items-center justify-center mx-auto mb-3" style="background:color-mix(in srgb,var(--gold) 10%,transparent)"><i class="fa-solid fa-microphone" style="color:var(--gold)"></i></div><div class="font-semibold text-sm" style="color:var(--cream)">Live Worship</div><div class="text-xs mt-0.5" style="color:var(--mt)">Top gospel artists</div></div>
+      <div class="pcard text-center"><div class="w-10 h-10 rounded-xl flex items-center justify-center mx-auto mb-3" style="background:color-mix(in srgb,var(--rose) 10%,transparent)"><i class="fa-solid fa-hand-holding-heart" style="color:var(--rose)"></i></div><div class="font-semibold text-sm" style="color:var(--cream)">Healing &amp; Deliverance</div><div class="text-xs mt-0.5" style="color:var(--mt)">Signs, wonders &amp; God's power</div></div>
+      <div class="pcard text-center"><div class="w-10 h-10 rounded-xl flex items-center justify-center mx-auto mb-3" style="background:color-mix(in srgb,var(--sky) 10%,transparent)"><i class="fa-solid fa-person-dancing" style="color:var(--sky)"></i></div><div class="font-semibold text-sm" style="color:var(--cream)">Arts in Ministry</div><div class="text-xs mt-0.5" style="color:var(--mt)">Dance, Mime</div></div>
+      <div class="pcard text-center"><div class="w-10 h-10 rounded-xl flex items-center justify-center mx-auto mb-3" style="background:color-mix(in srgb,var(--sage) 10%,transparent)"><i class="fa-solid fa-hands-praying" style="color:var(--sage)"></i></div><div class="font-semibold text-sm" style="color:var(--cream)">Spiritual Encounter</div><div class="text-xs mt-0.5" style="color:var(--mt)">Salvation &amp; transformation</div></div>
+      <div class="pcard text-center col-span-2"><div class="w-10 h-10 rounded-xl flex items-center justify-center mx-auto mb-3" style="background:color-mix(in srgb,var(--gold) 10%,transparent)"><i class="fa-solid fa-bolt-lightning" style="color:var(--gold)"></i></div><div class="font-semibold text-sm" style="color:var(--cream)">Breakthrough</div><div class="text-xs mt-0.5" style="color:var(--mt)">Miracles, signs &amp; wonders</div></div>
+    </div>
+    <div class="pcard text-center" style="margin-bottom:20px"><p class="text-sm leading-relaxed" style="color:var(--mt)">More than a concert — a <strong style="color:var(--cream)">movement</strong> to unite Jamaica for the glory of God.</p></div>
+
+    <div style="margin:0 0 28px;background:var(--s2);border:1px solid var(--bd);border-radius:20px;padding:22px 24px">
+      <div style="font-size:9px;font-weight:800;letter-spacing:.15em;text-transform:uppercase;color:var(--dm);margin-bottom:18px;text-align:center">Proudly Presented By</div>
+      <div style="display:flex;align-items:center;justify-content:center;gap:20px;flex-wrap:wrap">
+        <a href="https://visitjamaica.com" target="_blank" style="display:flex;flex-direction:column;align-items:center;gap:6px;text-decoration:none">
+          <div style="width:64px;height:48px;border-radius:12px;background:white;display:flex;align-items:center;justify-content:center;border:1px solid var(--bd);overflow:hidden;padding:6px">
+            <img src="https://assets.simpleviewinc.com/simpleview/image/upload/v1/clients/jamaica-redesign/logo_black_2546a47c-f1a8-4b64-87d0-d42b3f109e44.png" style="width:100%;height:100%;object-fit:contain" onerror="this.parentElement.innerHTML='<i class=\'fa-solid fa-globe\'  style=\'color:#1a6b3c;font-size:22px\'></i>'">
+          </div>
+          <span style="font-size:9px;font-weight:700;color:var(--dm);letter-spacing:.04em;text-align:center;max-width:72px;line-height:1.3">Jamaica Tourist Board</span>
+        </a>
+        <div style="width:1px;height:48px;background:var(--bd)"></div>
+        <a href="https://www.jnbank.com" target="_blank" style="display:flex;flex-direction:column;align-items:center;gap:6px;text-decoration:none">
+          <div style="width:64px;height:48px;border-radius:12px;background:white;display:flex;align-items:center;justify-content:center;border:1px solid var(--bd);overflow:hidden;padding:6px">
+            <img src="https://www.jnbank.com/wp-content/uploads/2021/11/0009_jnbanklogo.png" style="width:100%;height:100%;object-fit:contain" onerror="this.parentElement.innerHTML='<i class=\'fa-solid fa-building-columns\' style=\'color:#003082;font-size:22px\'></i>'">
+          </div>
+          <span style="font-size:9px;font-weight:700;color:var(--dm);letter-spacing:.04em;text-align:center;max-width:72px;line-height:1.3">JN Bank</span>
+        </a>
+        <div style="width:1px;height:48px;background:var(--bd)"></div>
+        <a href="https://www.bestdressedchicken.com" target="_blank" style="display:flex;flex-direction:column;align-items:center;gap:6px;text-decoration:none">
+          <div style="width:64px;height:48px;border-radius:12px;background:white;display:flex;align-items:center;justify-content:center;border:1px solid var(--bd);overflow:hidden;padding:4px">
+            <img src="https://www.bestdressedchicken.com/wp-content/uploads/2025/02/LOGO-BDC-2023.png" style="width:100%;height:100%;object-fit:contain" onerror="this.parentElement.innerHTML='<i class=\'fa-solid fa-utensils\' style=\'color:#e63000;font-size:22px\'></i>'">
+          </div>
+          <span style="font-size:9px;font-weight:700;color:var(--dm);letter-spacing:.04em;text-align:center;max-width:72px;line-height:1.3">Best Dressed Chicken</span>
+        </a>
+      </div>
+    </div>`);
+}
+
+function selTix(k,n,p){
+  const d=TIX_DATA[k];if(!d)return;
+  const bg=$('tdp-bg');
+  bg.style.background=d.bg;
+  bg.classList.toggle('animated',d.animated);
+  if(d.animated)bg.style.backgroundSize='300% 300%';
+  const orb1=$('tdp-orb1'),orb2=$('tdp-orb2'),shimmer=$('tdp-shimmer');
+  if(d.animated){
+    orb1.style.cssText=`width:220px;height:220px;top:-40px;right:-40px;background:${d.accentColor};opacity:.25;`;
+    orb2.style.cssText=`width:180px;height:180px;bottom:20px;left:-30px;background:${d.color==='#3a0020'?'#9A28AA':d.accentColor};opacity:.2;`;
+    orb1.className='tdp-orb tdp-orb-1';orb2.className='tdp-orb tdp-orb-2';
+    shimmer.style.display='block';
+  }else{
+    orb1.style.cssText='';orb2.style.cssText='';
+    orb1.className='tdp-orb';orb2.className='tdp-orb';
+    shimmer.style.display='none';
+  }
+  $('tdp-tag').textContent=d.tag;$('tdp-title').textContent=n;$('tdp-price').textContent=p;
+  $('tdp-tag').style.background=d.animated?'rgba(255,255,255,.12)':'rgba(255,255,255,.08)';
+  const perksHtml=d.perks.map(pk=>`<div class="tdp-perk"><div class="tdp-perk-icon" style="background:color-mix(in srgb,${d.accentColor} 12%,transparent)">${pk.icon}</div><div><div class="tdp-perk-name">${pk.name}</div><div class="tdp-perk-sub">${pk.sub}</div></div></div>`).join('');
+  $('tdp-body').innerHTML=`
+    <div class="tdp-card tdp-anim" style="animation-delay:.08s"><div class="tdp-section-label">About This Experience</div><p class="tdp-desc">${d.desc}</p></div>
+    <div class="tdp-card tdp-anim" style="animation-delay:.15s"><div class="tdp-section-label">What's Included</div>${perksHtml}</div>
+    <div class="tdp-card tdp-anim" style="animation-delay:.22s">
+      <div class="tdp-section-label">Secure Your Spot</div>
+      <input class="tdp-input" type="text" placeholder="Full Name">
+      <input class="tdp-input" type="email" placeholder="Email Address">
+      <input class="tdp-input" type="tel" placeholder="Phone (876-555-0000)">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:11px">
+        <span style="font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.4)">Qty</span>
+        <select class="tdp-select" style="margin-bottom:0;flex:1"><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select>
+      </div>
+      <button class="tdp-buy" style="background:${d.btnBg};color:${d.btnColor}" onclick="this.textContent='✓ Reserved!';this.style.opacity='.5';this.disabled=true">Reserve — ${p}</button>
+    </div>
+    <div style="height:24px"></div>`;
+  const sc=$('tdp-scroll');if(sc)sc.scrollTop=0;
+  $('tix-detail-panel').classList.toggle('light-tier',!d.animated);
+  $('tix-detail-panel').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeTixDetail(){$('tix-detail-panel').classList.remove('open');document.body.style.overflow='';}
+
+/* ═══ RADIO ═══ */
+let radioPlaying=false,radioAudio=null;
+function initRadio(){
+  if(radioAudio)return;
+  radioAudio=new Audio();
+  radioAudio.crossOrigin='anonymous';
+  radioAudio.onerror=()=>{setRadioStatus('error');};
+  radioAudio.onplaying=()=>{setRadioStatus('playing');};
+  radioAudio.onwaiting=()=>{setRadioStatus('buffering');};
+  radioAudio.onstalled=()=>{setRadioStatus('buffering');};
+  radioAudio.onpause=()=>{if(!radioPlaying)setRadioStatus('idle');};
+}
+function setRadioStatus(s){
+  const dot=$('radio-dot'),lbl=$('radio-lbl'),eq=$('radio-eq');
+  if(!dot)return;
+  if(s==='playing'){dot.style.background='#22c55e';lbl.textContent='Live · On Air';if(eq)eq.style.display='flex';}
+  else if(s==='buffering'){dot.style.background='var(--gold)';lbl.textContent='Buffering…';if(eq)eq.style.display='none';}
+  else if(s==='error'){dot.style.background='var(--rose)';lbl.textContent='Stream unavailable';if(eq)eq.style.display='none';}
+  else{dot.style.background='var(--dm)';lbl.textContent='Tap play to tune in';if(eq)eq.style.display='none';}
+}
+function toggleRadio(){
+  initRadio();
+  if(radioPlaying){
+    radioPlaying=false;radioAudio.pause();radioAudio.src='';
+    setRadioStatus('idle');
+    $('radio-play-btn').innerHTML='<i class="fa-solid fa-play"></i>';
+  }else{
+    radioPlaying=true;
+    setRadioStatus('buffering');
+    $('radio-play-btn').innerHTML='<i class="fa-solid fa-stop"></i>';
+    // Try known stream endpoints
+    const streams=['https://omegasports.co:8000/stream','https://omegasports.co:8080/stream','https://stream.omegasports.co/live','https://omegasports.co/radio/stream'];
+    let tried=0;
+    function tryNext(){
+      if(tried>=streams.length){setRadioStatus('error');$('radio-iframe').style.display='block';return;}
+      radioAudio.src=streams[tried++];
+      radioAudio.load();radioAudio.play().catch(tryNext);
+    }
+    tryNext();
+  }
+}
+function rRadio(){
+  // Render the radio page
+}
+
+
+/* ═══ PRAY PAGE ═══ */
+function rPray(){
+  const chips=[['Strength','Prayer for strength and courage'],['Peace','Prayer for peace and calm'],['Gratitude','A prayer of gratitude and thanksgiving'],['Family','Prayer for my family'],['Healing','Prayer for healing and restoration'],['Guidance','Prayer for wisdom and direction']];
+  const pchips=document.getElementById('pray-chips');
+  if(pchips)pchips.innerHTML=chips.map(([l,q])=>`<div class="chip" onclick="promptAI('${q}');grantXP(20,'Prayer written')">${l}</div>`).join('');
+  const plog=document.getElementById('pray-log');
+  if(!plog)return;
+  if(!prayers.length){plog.innerHTML='<div class="pcard text-center py-8"><div class="empty-illo" style="background:color-mix(in srgb,var(--rose) 10%,transparent)"><i class="fa-solid fa-hands-praying text-2xl" style="color:var(--rose)"></i></div><p class="text-sm font-medium" style="color:var(--mt)">Your prayers will appear here.</p></div>';return;}
+  plog.innerHTML='<h4 class="text-xs font-bold uppercase tracking-widest mb-3" style="color:var(--mt)">Recent Prayers</h4>'+prayers.slice(-5).reverse().map(p=>`<div class="pcard mb-3"><p class="text-sm leading-relaxed" style="color:var(--txt)">${esc(p.text.substring(0,200))}</p><p class="text-xs mt-2" style="color:var(--dm)">${new Date(p.date).toLocaleDateString()}</p></div>`).join('');
+}
+
+/* ═══ SAVED PAGE ═══ */
+function rSaved(){
+  const scnt=document.getElementById('scnt');
+  const slst=document.getElementById('slst');
+  if(scnt)scnt.textContent=saved.length+' saved moment'+(saved.length!==1?'s':'');
+  if(!slst)return;
+  if(!saved.length){slst.innerHTML='<div class="pcard text-center py-10"><div class="empty-illo" style="background:color-mix(in srgb,var(--gold) 10%,transparent)"><i class="fa-solid fa-bookmark text-2xl" style="color:var(--gold)"></i></div><p class="text-sm font-medium" style="color:var(--mt)">Save verses, prayers, and reflections as you study.</p></div>';return;}
+  slst.innerHTML=saved.slice().reverse().map((s,i)=>`<div class="pcard mb-3"><div class="flex items-start justify-between gap-3"><div class="flex-1 min-w-0">${s.ref?`<p class="verse-r mb-1">${esc(s.ref)}</p>`:`<p class="text-xs font-bold uppercase tracking-wider mb-1" style="color:var(--mt)">${esc(s.type||'note')}</p>`}<p class="text-sm leading-relaxed" style="color:var(--txt)">${esc((s.text||'').substring(0,300))}</p><p class="text-xs mt-2" style="color:var(--dm)">${new Date(s.date).toLocaleDateString()}</p></div><button onclick="saved.splice(saved.length-1-${i},1);localStorage.uf_sv=JSON.stringify(saved);rSaved();" style="color:var(--dm);background:none;border:none;cursor:pointer;padding:2px;font-size:14px;flex-shrink:0">✕</button></div></div>`).join('');
+}
+
 </script>
+<script>
+document.addEventListener('DOMContentLoaded', initSplash);
+</script>
+
+<!-- ═══ TICKET DETAIL PANEL ═══ -->
+<div id="tix-detail-panel">
+  <div class="tdp-bg-full" id="tdp-bg"></div>
+  <div class="tdp-overlay"></div>
+  <div class="tdp-orb tdp-orb-1" id="tdp-orb1"></div>
+  <div class="tdp-orb tdp-orb-2" id="tdp-orb2"></div>
+  <div class="tdp-shimmer" id="tdp-shimmer"></div>
+  <button class="tdp-back" onclick="closeTixDetail()"><i class="fa-solid fa-arrow-left"></i></button>
+  <div class="tdp-scroll" id="tdp-scroll">
+    <div class="tdp-header tdp-anim">
+      <div class="tdp-tag" id="tdp-tag"></div>
+      <div class="tdp-title" id="tdp-title"></div>
+      <div class="tdp-price" id="tdp-price"></div>
+    </div>
+    <div id="tdp-body"></div>
+  </div>
+</div>
 </body>
 </html>
- 
