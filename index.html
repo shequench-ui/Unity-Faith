@@ -641,7 +641,7 @@ color:var(--mt);cursor:pointer;transition:all .12s;width:100%;margin-bottom:2px;
 
 <!-- RADIO -->
 <div class="page" id="pg-radio">
-<div class="flex items-center gap-3 mb-6">
+<div class="flex items-center gap-3 mb-5">
   <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background:color-mix(in srgb,var(--sky) 12%,transparent)">
     <i class="fa-solid fa-radio" style="color:var(--sky)"></i>
   </div>
@@ -652,62 +652,85 @@ color:var(--mt);cursor:pointer;transition:all .12s;width:100%;margin-bottom:2px;
 </div>
 
 <!-- PLAYER CARD -->
-<div class="rounded-2xl overflow-hidden mb-5 relative" style="background:linear-gradient(145deg,#0a1520,#0d2035,#0a1520);border:1px solid color-mix(in srgb,var(--sky) 15%,transparent)">
-  <div class="absolute inset-0" style="background:radial-gradient(circle at 70% 30%,rgba(125,170,196,.12),transparent 60%),radial-gradient(circle at 20% 80%,rgba(201,168,76,.08),transparent 50%)"></div>
-  <div class="relative z-10 px-6 py-8 text-center">
+<div class="rounded-2xl overflow-hidden mb-5 relative" style="background:linear-gradient(145deg,#07111c,#0d1f30,#07111c);border:1px solid rgba(125,170,196,.22)">
+  <div class="absolute inset-0" style="background:radial-gradient(circle at 70% 20%,rgba(125,170,196,.12),transparent 55%),radial-gradient(circle at 15% 80%,rgba(201,168,76,.07),transparent 50%)"></div>
+  <div class="relative z-10 px-6 pt-7 pb-6 text-center">
     <!-- Station logo -->
-    <div class="w-20 h-20 rounded-2xl mx-auto mb-5 flex items-center justify-center" style="background:color-mix(in srgb,var(--sky) 15%,rgba(0,0,0,.3));border:1.5px solid color-mix(in srgb,var(--sky) 25%,transparent)">
-      <i class="fa-solid fa-radio text-3xl" style="color:var(--sky)"></i>
+    <div class="w-20 h-20 rounded-2xl mx-auto mb-4 overflow-hidden" style="border:1.5px solid rgba(125,170,196,.3);background:rgba(255,255,255,.06)">
+      <img src="https://img1.wsimg.com/isteam/ip/110b9c42-85c9-44d5-b5fe-97c8299edea1/omega%20radio%2089fm%20logo.png/:/rs=h:153,cg:true,m/qt=q:95" style="width:100%;height:100%;object-fit:contain;padding:4px" onerror="this.parentElement.innerHTML='<i class=\'fa-solid fa-radio\' style=\'color:#7DAAC4;font-size:28px;line-height:80px\'></i>'">
     </div>
-    <div class="text-xs font-bold uppercase tracking-[.15em] mb-1" style="color:var(--sky)">Omega Sports Radio</div>
-    <div class="font-display text-2xl font-bold mb-1" style="color:var(--cream)">Live Stream</div>
+    <div style="font-size:10px;font-weight:800;letter-spacing:.15em;text-transform:uppercase;color:#7DAAC4;margin-bottom:4px">Omega Church Broadcasting</div>
+    <div style="font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:700;color:#F5ECD7;margin-bottom:14px">KLAS Omega 89 FM</div>
+
     <!-- Status row -->
-    <div class="flex items-center justify-center gap-2 mb-6">
-      <div id="radio-dot" style="width:8px;height:8px;border-radius:50%;background:var(--dm);transition:background .3s"></div>
-      <span id="radio-lbl" class="text-sm font-medium" style="color:var(--mt)">Tap play to tune in</span>
+    <div style="display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:18px">
+      <div id="radio-dot" style="width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.25);flex-shrink:0;transition:background .3s"></div>
+      <span id="radio-lbl" style="font-size:13px;font-weight:500;color:rgba(255,255,255,.5)">Tap play to tune in</span>
     </div>
-    <!-- EQ bars animation -->
-    <div id="radio-eq" class="flex items-end justify-center gap-1 mb-5" style="display:none!important;height:24px">
-      <div style="width:3px;border-radius:2px;background:var(--sky);animation:eq1 .8s ease-in-out infinite"></div>
-      <div style="width:3px;border-radius:2px;background:var(--sky);animation:eq2 .8s ease-in-out infinite .1s"></div>
-      <div style="width:3px;border-radius:2px;background:var(--sky);animation:eq1 .8s ease-in-out infinite .2s"></div>
-      <div style="width:3px;border-radius:2px;background:var(--sky);animation:eq2 .8s ease-in-out infinite .3s"></div>
-      <div style="width:3px;border-radius:2px;background:var(--sky);animation:eq1 .8s ease-in-out infinite .15s"></div>
+
+    <!-- EQ bars -->
+    <div id="radio-eq" style="display:none;justify-content:center;align-items:flex-end;gap:3px;height:20px;margin-bottom:16px">
+      <div style="width:3px;border-radius:2px;background:#7DAAC4;animation:eq1 .7s ease-in-out infinite"></div>
+      <div style="width:3px;border-radius:2px;background:#7DAAC4;animation:eq2 .7s ease-in-out infinite .1s"></div>
+      <div style="width:3px;border-radius:2px;background:#7DAAC4;animation:eq1 .7s ease-in-out infinite .2s"></div>
+      <div style="width:3px;border-radius:2px;background:#7DAAC4;animation:eq2 .7s ease-in-out infinite .3s"></div>
+      <div style="width:3px;border-radius:2px;background:#7DAAC4;animation:eq1 .7s ease-in-out infinite .15s"></div>
     </div>
+
     <!-- Play button -->
-    <button id="radio-play-btn" onclick="toggleRadio()" class="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-5 transition" style="background:var(--sky);color:#0a1520;font-size:20px;box-shadow:0 8px 28px -4px rgba(125,170,196,.4)">
-      <i class="fa-solid fa-play"></i>
-    </button>
-    <!-- Open in browser -->
-    <a href="https://omegasports.co/listen-live" target="_blank" class="text-xs font-semibold" style="color:var(--dm)">Open in browser →</a>
+    <div id="radio-play-ctrl" style="display:flex;flex-direction:column;align-items:center;gap:12px">
+      <button id="radio-play-btn" onclick="toggleRadio()" style="width:60px;height:60px;border-radius:50%;background:#7DAAC4;color:#07111c;font-size:18px;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 28px -4px rgba(125,170,196,.4);transition:transform .15s,opacity .15s">
+        <i class="fa-solid fa-play" style="margin-left:2px"></i>
+      </button>
+      <a href="https://omegasports.co/listen-live" target="_blank" style="font-size:12px;font-weight:600;color:rgba(255,255,255,.35);text-decoration:none">Omega Radio →</a>
+    </div>
   </div>
 </div>
 
-<!-- Fallback iframe (hidden, activates on stream error) -->
-<div id="radio-iframe" style="display:none;border-radius:16px;overflow:hidden;margin-bottom:16px">
-  <iframe src="https://omegasports.co/listen-live" style="width:100%;height:160px;border:none;border-radius:16px" allowfullscreen allow="autoplay"></iframe>
+<!-- Zeno.fm embedded player — injected on play -->
+<div id="radio-zeno-frame" style="margin-bottom:16px;display:none">
+  <!-- iframe injected here by toggleRadio() -->
+</div>
+<div id="radio-stop-row" style="display:none;justify-content:center;margin-bottom:12px">
+  <button onclick="toggleRadio()" style="display:flex;align-items:center;gap:8px;padding:10px 20px;border-radius:100px;background:rgba(125,170,196,.15);border:1px solid rgba(125,170,196,.25);color:#7DAAC4;font-size:13px;font-weight:600;cursor:pointer">
+    <i class="fa-solid fa-stop" style="font-size:11px"></i> Stop
+  </button>
 </div>
 
 <!-- INFO CARDS -->
-<div class="grid grid-cols-2 gap-3 mb-5">
+<div class="grid grid-cols-2 gap-3 mb-4">
   <div class="pcard text-center" style="padding:14px">
-    <div class="text-xl mb-1">📡</div>
+    <i class="fa-solid fa-signal mb-2" style="color:var(--sky);font-size:18px"></i>
     <div class="text-xs font-bold uppercase tracking-wider mb-0.5" style="color:var(--mt)">Format</div>
-    <div class="text-sm font-semibold" style="color:var(--cream)">Gospel · Faith · Sport</div>
+    <div class="text-sm font-semibold" style="color:var(--cream)">Gospel &amp; Sports</div>
   </div>
   <div class="pcard text-center" style="padding:14px">
-    <div class="text-xl mb-1">🇯🇲</div>
+    <i class="fa-solid fa-location-dot mb-2" style="color:var(--gold);font-size:18px"></i>
     <div class="text-xs font-bold uppercase tracking-wider mb-0.5" style="color:var(--mt)">Location</div>
     <div class="text-sm font-semibold" style="color:var(--cream)">Kingston, Jamaica</div>
   </div>
+  <div class="pcard text-center" style="padding:14px">
+    <i class="fa-solid fa-tower-broadcast mb-2" style="color:var(--sage);font-size:18px"></i>
+    <div class="text-xs font-bold uppercase tracking-wider mb-0.5" style="color:var(--mt)">Frequency</div>
+    <div class="text-sm font-semibold" style="color:var(--cream)">89.1 – 89.9 MHz</div>
+  </div>
+  <div class="pcard text-center" style="padding:14px">
+    <i class="fa-solid fa-globe mb-2" style="color:var(--rose);font-size:18px"></i>
+    <div class="text-xs font-bold uppercase tracking-wider mb-0.5" style="color:var(--mt)">Network</div>
+    <div class="text-sm font-semibold" style="color:var(--cream)">Omega Church Broadcasting</div>
+  </div>
 </div>
 
-<!-- Now Playing / Request -->
-<div class="pcard mb-4" style="border-color:color-mix(in srgb,var(--sky) 15%,transparent)">
-  <div class="text-xs font-bold uppercase tracking-widest mb-3" style="color:var(--mt)">Make a Prayer Request</div>
-  <p class="text-sm leading-relaxed mb-4" style="color:var(--txt)">While you listen, share what's on your heart and Unity Faith will pray with you.</p>
-  <button class="chip-primary w-full text-center justify-center" onclick="promptAI('I need prayer while I listen to worship music');goTab('home')">🙏 Submit Prayer Request</button>
+<!-- Prayer while listening -->
+<div class="pcard" style="border-color:color-mix(in srgb,var(--sky) 15%,transparent)">
+  <div class="text-xs font-bold uppercase tracking-widest mb-2" style="color:var(--mt)">Prayer While You Listen</div>
+  <p class="text-sm leading-relaxed mb-3" style="color:var(--txt)">Share what's on your heart and Unity Faith will pray with you as you tune in.</p>
+  <button class="chip-primary" style="justify-content:center" onclick="promptAI('Help me write a prayer while I listen to worship music');goTab('home')">
+    <i class="fa-solid fa-hands-praying" style="font-size:12px"></i> Submit Prayer Request
+  </button>
 </div>
+</div>
+
 </div>
 
 <!-- PRAY -->
@@ -1487,7 +1510,7 @@ function openEvent(){
         <p class="text-sm mb-6" style="color:rgba(255,255,255,.4)">Revival · Worship · Healing · Breakthrough</p>
         <div class="flex justify-center gap-3 flex-wrap">
           <span class="text-xs font-bold px-3 py-1.5 rounded-full" style="background:rgba(255,255,255,.08);color:rgba(255,255,255,.7);border:1px solid rgba(255,255,255,.1)">🎤 Live Worship</span>
-          <span class="text-xs font-bold px-3 py-1.5 rounded-full" style="background:rgba(255,255,255,.08);color:rgba(255,255,255,.7);border:1px solid rgba(255,255,255,.1)">🔥 Healing & Deliverance</span>
+          <span class="text-xs font-bold px-3 py-1.5 rounded-full" style="background:rgba(255,255,255,.08);color:rgba(255,255,255,.7);border:1px solid rgba(255,255,255,.1)">🏟️ Healing & Deliverance</span>
           <span class="text-xs font-bold px-3 py-1.5 rounded-full" style="background:rgba(255,255,255,.08);color:rgba(255,255,255,.7);border:1px solid rgba(255,255,255,.1)">✨ Breakthrough</span>
         </div>
       </div>
@@ -1633,30 +1656,31 @@ function initRadio(){
 function setRadioStatus(s){
   const dot=$('radio-dot'),lbl=$('radio-lbl'),eq=$('radio-eq');
   if(!dot)return;
-  if(s==='playing'){dot.style.background='#22c55e';lbl.textContent='Live · On Air';if(eq)eq.style.display='flex';}
-  else if(s==='buffering'){dot.style.background='var(--gold)';lbl.textContent='Buffering…';if(eq)eq.style.display='none';}
-  else if(s==='error'){dot.style.background='var(--rose)';lbl.textContent='Stream unavailable';if(eq)eq.style.display='none';}
-  else{dot.style.background='var(--dm)';lbl.textContent='Tap play to tune in';if(eq)eq.style.display='none';}
+  if(s==='playing'){dot.style.background='#22c55e';if(lbl){lbl.textContent='● Live · On Air';lbl.style.color='rgba(255,255,255,.8)';}if(eq)eq.style.display='flex';}
+  else if(s==='buffering'){dot.style.background='#C9A84C';if(lbl){lbl.textContent='Connecting…';lbl.style.color='rgba(255,255,255,.5)';}if(eq)eq.style.display='none';}
+  else if(s==='error'){dot.style.background='#C47D7D';if(lbl){lbl.textContent='Using embedded player';lbl.style.color='rgba(255,255,255,.5)';}if(eq)eq.style.display='none';}
+  else{dot.style.background='rgba(255,255,255,.2)';if(lbl){lbl.textContent='Tap play to tune in';lbl.style.color='rgba(255,255,255,.5)';}if(eq)eq.style.display='none';}
 }
 function toggleRadio(){
-  initRadio();
   if(radioPlaying){
-    radioPlaying=false;radioAudio.pause();radioAudio.src='';
+    radioPlaying=false;
+    // Hide the Zeno iframe and restore play button
+    const frame=$('radio-zeno-frame');
+    if(frame){frame.style.display='none';frame.innerHTML='';}
+    const stopRow=$('radio-stop-row');if(stopRow)stopRow.style.display='none';
+    const ctrl=$('radio-play-ctrl');if(ctrl)ctrl.style.display='flex';
     setRadioStatus('idle');
-    $('radio-play-btn').innerHTML='<i class="fa-solid fa-play"></i>';
   }else{
     radioPlaying=true;
-    setRadioStatus('buffering');
-    $('radio-play-btn').innerHTML='<i class="fa-solid fa-stop"></i>';
-    // Try known stream endpoints
-    const streams=['https://omegasports.co:8000/stream','https://omegasports.co:8080/stream','https://stream.omegasports.co/live','https://omegasports.co/radio/stream'];
-    let tried=0;
-    function tryNext(){
-      if(tried>=streams.length){setRadioStatus('error');$('radio-iframe').style.display='block';return;}
-      radioAudio.src=streams[tried++];
-      radioAudio.load();radioAudio.play().catch(tryNext);
+    // Hide play button, show Zeno iframe (auto-plays)
+    const ctrl=$('radio-play-ctrl');if(ctrl)ctrl.style.display='none';
+    setRadioStatus('playing');
+    const stopRow=$('radio-stop-row');if(stopRow)stopRow.style.display='flex';
+    const frame=$('radio-zeno-frame');
+    if(frame){
+      frame.style.display='block';
+      frame.innerHTML='<iframe src="https://player.zeno.fm/0xYWd4emZucGxibTh0YzNSaGRITnlNZ3NTQ2tGMWRHaERiR2xsYm5RWWdJQ0F4TmE1eFFzTUN4SU9VM1JoZEdsdmJsQnliMlpwYkdVWWdJQ0FnTzZzaEFvTW9nRUVlbVZ1Ync=" style="width:100%;height:155px;border:none;border-radius:16px;display:block" allow="autoplay" title="KLAS Omega 89 FM"></iframe>';
     }
-    tryNext();
   }
 }
 function rRadio(){
